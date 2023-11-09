@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('pr_id')->references('id')->on('p_r_s')->onDelete('cascade');
             $table->integer('pr_line');
             $table->string('pci_no');
-            $table->string('pr_line_desc');
+            $table->string('pr_line_desc',750);
             $table->date('pr_created');
             $table->date('pr_approve_date')->nullable();
             $table->date('pr_last_changed')->nullable();

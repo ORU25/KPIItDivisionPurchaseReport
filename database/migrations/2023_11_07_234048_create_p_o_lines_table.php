@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('pr_line_id');
             $table->foreign('pr_line_id')->references('id')->on('p_r_lines')->onDelete('cascade');
             $table->integer('po_line');
-            $table->string('po_line_desc');
+            $table->string('po_line_desc',750);
             $table->integer('qty_order');
             $table->string('unit_price_currency');
             $table->float('unit_price_po');

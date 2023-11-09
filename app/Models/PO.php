@@ -11,7 +11,6 @@ class PO extends Model
 
     protected $fillable = [
         "po_no",
-        "pr_id",
         "po_desc",
         "po_created",
         "po_last_changed",
@@ -25,7 +24,7 @@ class PO extends Model
     ] ;
 
     public function pr(){
-        return $this->belongsTo(PR::class);
+        return $this->belongsToMany(PR::class, 'pr_po', 'po_id', 'id');
     }
 
     public function po_line(){

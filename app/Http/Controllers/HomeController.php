@@ -30,11 +30,9 @@ class HomeController extends Controller
     {   
         $totalPr = PR::all()->count();
         $prSuccess = PR::whereHas('po')->get()->count();
-        $prCancel = PR::whereDoesntHave('pr_line', function ($query) {
-            $query->where('pr_cancel', '=','0000-00-00');
-        })->get()->count();
+        $prCancel = PR::whereDoesntHave('po')->get()->count();
         $totalPrLine = PRLine::all()->count();
-        $prLineSuccess = PRLine::where('pr_cancel', '=', '0000-00-00')->count();
+        $prLineSuccess = PRLine::where('pr_cancel','0000-00-00')->count();
         $prLineCancel = PRLine::where('pr_cancel', '!=', '0000-00-00')->count();
 
 
