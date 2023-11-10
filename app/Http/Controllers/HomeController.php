@@ -35,12 +35,35 @@ class HomeController extends Controller
         $prLineSuccess = PRLine::where('pr_cancel','0000-00-00')->count();
         $prLineCancel = PRLine::where('pr_cancel', '!=', '0000-00-00')->count();
 
+        $prType = PR::select('pr_type', DB::raw('COUNT(*) as pr_type_count'))
+        ->groupBy('pr_type')->get();
+
+        $prRequester = PR::select('requested_by', DB::raw('COUNT(*) as pr_request_count'))
+        ->groupBy('requested_by')
+        ->get();
+
+        $prBuyer = PR::select('buyer', DB::raw('COUNT(*) as pr_buyer_count'))
+        ->groupBy('buyer')->get();
+
+        $prLineYear = PRLine::select(DB::raw('YEAR(pr_created) as year'), DB::raw('COUNT(*) as pr_line_year_count'))
+        ->groupBy(DB::raw('YEAR(pr_created)'))->get();
+         
+        
 
         $totalPo = PO::all()->count();
         $poSuccess=PO::where('po_cancel', '=', '0000-00-00')->count();
         $poCancel = PO::where('po_cancel', '!=', '0000-00-00')->count();
         $totalPoLine = POLine::all()->count();
+        $poLineSuccess = POLine::where('po_cancel_line', '0000-00-00')->count();
         $poLineCancel = POLine::where('po_cancel_line', '!=', '0000-00-00')->count();
+
+        $vendorTypePoCount = PO::select('vendor_type', DB::raw('COUNT(*) as po_count'))
+        ->groupBy('vendor_type')
+        ->get();
+
+        $poYear = PO::select(DB::raw('YEAR(po_created) as year'), DB::raw('COUNT(*) as po_year_count'))
+        ->groupBy(DB::raw('YEAR(po_created)'))
+        ->get();
         
 
         return view('home', compact(
@@ -50,11 +73,24 @@ class HomeController extends Controller
             'prLineSuccess',
             'prLineCancel',
             'prSuccess',
+
+            'prType',
+            'prRequester',
+            'prBuyer',
+            'prLineYear',
+
+
             'totalPo',
             'poSuccess',
             'poCancel',
             'totalPoLine',
+            'poLineSuccess',
             'poLineCancel',
+
+            
+            'vendorTypePoCount',
+            'poYear',
+
         ));
     }
 }
