@@ -1,6 +1,4 @@
-@extends('layouts.app')
 
-@section('content')
     <div class="container-fluid">
         <h3 class="text-success">Total PR: {{ $totalPr }}</h3>
         <h3 class="text-success">PR Success: {{ $prSuccess }}</h3>
@@ -81,4 +79,4 @@
         <br>
         <br>
     </div>
-@endsection
+
