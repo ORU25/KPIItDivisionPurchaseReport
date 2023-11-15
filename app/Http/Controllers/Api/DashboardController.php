@@ -59,7 +59,7 @@ class DashboardController extends Controller
             'prSuccess' => $prSuccess,
             'totalPrLine' => $totalPrLine,
             'prLineSuccess' => $prLineSuccess,
-            'prLineCancel' => $prLineSuccess,
+            'prLineCancel' => $prLineCancel,
 
 
             'prType' => $prType,
