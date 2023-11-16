@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class PrController extends Controller
 {
     public function index(){
-        $pr = PR::paginate(10);
+        $pr = PR::all();
         return response()->json($pr);
     }
 }

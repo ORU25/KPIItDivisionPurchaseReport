@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class PoController extends Controller
 {
     public function index(){
-        $po = PO::paginate(10);
+        $po = PO::all();
         return response()->json($po);
     }
 }
