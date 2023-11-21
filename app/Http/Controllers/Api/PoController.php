@@ -21,6 +21,18 @@ class PoController extends Controller
         }
     
         $poLines = $po->po_line;
+
+        $totalPriceIDR = 0;
+
+        foreach ($poLines as $poLine) {
+            if ($poLine->total_price_currency === 'USD') {
+                $totalPriceIDR += $poLine->total_price * 15000;
+            } else {
+                $totalPriceIDR += $poLine->total_price;
+            }
+        }
+
+        $formattedTotalPriceIDR = number_format($totalPriceIDR, 0, ',', '.');
     
         $data = [
             'id' => $po->id,
@@ -35,6 +47,7 @@ class PoController extends Controller
             'po_cancel'=> $po->po_cancel,
             'vendor' => $po->vendor,
             'vendor_type' => $po->vendor_type,
+            'total_price_idr' =>  $formattedTotalPriceIDR,
             'po_lines' => $poLines->map(function ($line) {
             return $line;
         })];

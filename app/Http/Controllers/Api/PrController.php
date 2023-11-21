@@ -22,6 +22,19 @@ class PrController extends Controller
         }
     
         $prLines = $pr->pr_line;
+
+        $totalPriceIDR = 0;
+
+        foreach ($prLines as $prLine) {
+            if ($prLine->est_currency === 'USD') {
+                $totalPriceIDR += $prLine->est_price * $prLine->est_qty * 15000;
+            } else {
+                $totalPriceIDR += $prLine->est_price * $prLine->est_qty ;
+            }
+        }
+
+        $formattedTotalPriceIDR = number_format($totalPriceIDR, 0, ',', '.');
+    
     
         $data =[
             'id' => $pr->id,
@@ -29,6 +42,7 @@ class PrController extends Controller
             'pr_desc' => $pr->pr_desc,
             'buyer' => $pr->buyer,
             'requested_by' => $pr->requested_by,
+            'est_total_price_idr' => $formattedTotalPriceIDR,
             'pr_lines' => $prLines->map(function ($line) {
             return $line;
         })];
