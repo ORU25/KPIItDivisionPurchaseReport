@@ -52,6 +52,15 @@ class DashboardController extends Controller
         ->groupBy(DB::raw('YEAR(po_created)'))
         ->get();
         
+        $poYearPrice = Po::select(
+            DB::raw('YEAR(po_created) as year'),
+            DB::raw('SUM(CASE WHEN p_o_lines.total_price_currency = "USD" THEN p_o_lines.total_price * 15000 ELSE p_o_lines.total_price END) as total_price_per_year')
+        )
+            ->leftJoin('p_o_lines', 'p_o_s.id', '=', 'p_o_lines.po_id') // Hubungkan po dengan po_lines
+            ->groupBy(DB::raw('YEAR(po_created)'))
+            ->get();
+
+        
 
         return response()->json([
             'totalPr' => $totalPr,
@@ -59,7 +68,7 @@ class DashboardController extends Controller
             'prSuccess' => $prSuccess,
             'totalPrLine' => $totalPrLine,
             'prLineSuccess' => $prLineSuccess,
-            'prLineCancel' => $prLineSuccess,
+            'prLineCancel' => $prLineCancel,
 
 
             'prType' => $prType,
@@ -74,9 +83,12 @@ class DashboardController extends Controller
              'poLineSuccess' => $poLineSuccess,
              'poLineCancel' => $poLineCancel,
 
+             
+
             
              'vendorTypePoCount' => $vendorTypePoCount,
              'poYear' => $poYear,
+             'poYearPrice'=> $poYearPrice,
 
         ]);
     }

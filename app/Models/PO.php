@@ -28,6 +28,6 @@ class PO extends Model
     }
 
     public function po_line(){
-        return $this->hasMany(POLine::class);
+        return $this->hasMany(POLine::class,'po_id', 'id');
     }
 }
