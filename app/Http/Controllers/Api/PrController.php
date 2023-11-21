@@ -17,6 +17,8 @@ class PrController extends Controller
     public function pr_line($pr_no){
         $pr = PR::where('pr_no', $pr_no)->first();
 
+
+
         if (!$pr) {
             return response()->json(['message' => 'PR tidak ditemukan'], 404);
         }
@@ -43,6 +45,9 @@ class PrController extends Controller
             'buyer' => $pr->buyer,
             'requested_by' => $pr->requested_by,
             'est_total_price_idr' => $formattedTotalPriceIDR,
+            'po' => $pr->po->map(function($po){
+                return $po->po_no;
+            }),
             'pr_lines' => $prLines->map(function ($line) {
             return $line;
         })];

@@ -18,7 +18,7 @@ class PR extends Model
     }
 
     public function po(){
-        return $this->belongsToMany(PO::class, 'pr_po', 'pr_id', 'id');
+        return $this->belongsToMany(PO::class, 'pr_po', 'pr_id', 'po_id');
     }
     
 }

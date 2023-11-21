@@ -48,6 +48,9 @@ class PoController extends Controller
             'vendor' => $po->vendor,
             'vendor_type' => $po->vendor_type,
             'total_price_idr' =>  $formattedTotalPriceIDR,
+            'pr' => $po->pr->map(function($pr){
+                return $pr->pr_no;
+            }),
             'po_lines' => $poLines->map(function ($line) {
             return $line;
         })];
