@@ -55,14 +55,18 @@ class DashboardController extends Controller
             ->groupBy(DB::raw('YEAR(po_created)'))
             ->get();
         
-            $poYearPrice = Po::select(
-                DB::raw('YEAR(p_o_s.po_created) as year'),
-                // DB::raw('COUNT(DISTINCT p_o_s.id) as po_count'),
-                DB::raw('SUM(CASE WHEN p_o_lines.total_price_currency = "USD" THEN p_o_lines.total_price * 15000 ELSE p_o_lines.total_price END) as total_price_per_year'),
-            )
-                ->leftJoin('p_o_lines', 'p_o_s.id', '=', 'p_o_lines.po_id')
-                ->groupBy(DB::raw('YEAR(p_o_s.po_created)'))
-                ->get();
+        $poYearPrice = Po::select(
+            DB::raw('YEAR(po_created) as year'),
+            // DB::raw('COUNT(DISTINCT p_o_s.id) as po_count'),
+            DB::raw('SUM(CASE WHEN p_o_lines.total_price_currency = "USD" THEN p_o_lines.total_price * 15000 ELSE p_o_lines.total_price END) as total_price_per_year'),
+        )
+            ->leftJoin('p_o_lines', 'p_o_s.id', '=', 'p_o_lines.po_id')
+            ->groupBy(DB::raw('YEAR(po_created)'))
+            ->get();
+
+        $prYearEstPrice =  PRLine::select(DB::raw('YEAR(pr_created) as year'),
+            DB::raw('SUM(CASE WHEN est_currency = "USD" THEN est_price * est_qty * 15000 ELSE est_price * est_qty END) as total_est_price'))
+            ->groupBy(DB::raw('YEAR(pr_created)'))->get();
             
                 
         return response()->json([
@@ -91,7 +95,10 @@ class DashboardController extends Controller
             
              'vendorTypePoCount' => $vendorTypePoCount,
              'poYear' => $poYear,
+
+
              'poYearPrice'=> $poYearPrice,
+             'prYearEstPrice' => $prYearEstPrice,
 
         ]);
     }
