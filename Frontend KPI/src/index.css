@@ -1,0 +1,36 @@
+#login {
+  background-image: url(./assets/kpi3.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+}
+
+#loginCard {
+  animation-duration: 2s; 
+}
+.hover-alert:hover  {
+  color: white;
+}
+
+.nav-pills .nav-item .nav-link.active {
+  background-color: rgb(255, 255, 255); /* Ganti dengan warna yang diinginkan */
+
+}
+.nav-link.active {
+  pointer-events: none;
+}
+
+.opacity {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.dropdown-item:active{
+  background-color: white;
+  color: black;
+}
+
+.chart-loading {
+  margin-top: 7rem;
+  margin-bottom: 7rem;
+}
