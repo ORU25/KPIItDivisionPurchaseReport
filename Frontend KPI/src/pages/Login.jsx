@@ -47,21 +47,21 @@ const Login = () => {
         {/* /.login-logo */}
         <div className="card card-outline card-success opacity">
           <div className="card-header text-center ">
-            <p className="h1">
-              <img src={Logo} alt="" width={"60px"} />
-              <b className="text-success ml-2">PT. KPI</b>
+            <img src={Logo} alt="" width={"60px"} />
+            <p className="kpi-text-color ml-2 text-bold h4 mt-3">
+              PT KALTIM PARNA INDUSTRI
             </p>
           </div>
           <div className="card-body ">
             {isLoading ? (
               <>
-                <p className="login-box-msg text-success text-bold h5">
-                  IT DIVISION PURCHASE REPORT
+                <p className="login-box-msg kpi-text-color text-bold h5">
+                  PURCHASE REPORT
                 </p>
                 <div className="d-flex justify-content-center align-items-center my-5">
                   <h1>
                     <div
-                      className="spinner-border text-success text-bold"
+                      className="spinner-border kpi-text-color text-bold"
                       role="status"
                       style={{ width: "4rem", height: "4rem" }}
                     >
@@ -87,8 +87,8 @@ const Login = () => {
               </>
             ) : (
               <>
-                <p className="login-box-msg text-success text-bold h5">
-                  IT DIVISION PURCHASE REPORT
+                <p className="login-box-msg kpi-text-color text-bold h5">
+                  PURCHASE REPORT
                 </p>
                 <form onSubmit={loginHandler}>
                   {validation.message ? (

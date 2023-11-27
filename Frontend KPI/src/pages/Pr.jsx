@@ -70,10 +70,21 @@ const Pr = () => {
     // Specify the columns to exclude from the PDF table
     const excludedColumns = ["id", "departement", "created_at", "updated_at"];
 
+    const columnMapping = {
+      pr_no: "No",
+      pr_type: "Type",
+      pr_desc: "Description",
+      buyer: "Buyer",
+      requested_by: "Requested by",
+      pr_created: "Created",
+      pr_approve_date: "Approved",
+      pr_cancel: "Canceled",
+    };
+
     // Filter out the excluded columns
-    const filteredHeaders = Object.keys(selectedRows[0]).filter(
-      (header) => !excludedColumns.includes(header)
-    );
+    const filteredHeaders = Object.keys(selectedRows[0])
+      .filter((header) => !excludedColumns.includes(header))
+      .map((header) => columnMapping[header] || header);
 
     const filteredData = selectedRows.map((row) =>
       Object.keys(row)
@@ -85,10 +96,22 @@ const Pr = () => {
       head: [filteredHeaders],
       body: filteredData,
       startY: 20,
+      didDrawPage: (data) => {
+        // Custom header
+        doc.setFontSize(12);
+        doc.setTextColor(40);
+        doc.text("Purchase Report", data.settings.margin.left, 10);
+      },
     });
 
     doc.save("purchase_requisition.pdf");
   };
+
+  const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split("-");
+    return `${day}-${month}-${year}`;
+  };
+
   const column = [
     {
       name: "No",
@@ -108,6 +131,27 @@ const Pr = () => {
       selector: "pr_desc",
       sortable: true,
       width: "500px",
+    },
+    {
+      name: "Created",
+      selector: "pr_created",
+      sortable: true,
+      width: "150px",
+      cell: (row) => formatDate(row.pr_created),
+    },
+    {
+      name: "Approved",
+      selector: "pr_approve_date",
+      sortable: true,
+      width: "150px",
+      cell: (row) => formatDate(row.pr_approve_date),
+    },
+    {
+      name: "Canceled",
+      selector: "pr_cancel",
+      sortable: true,
+      width: "150px",
+      cell: (row) => formatDate(row.pr_cancel),
     },
     {
       name: "Requested by",
@@ -131,7 +175,6 @@ const Pr = () => {
             data={filter}
             pagination
             selectableRows
-            
             selectableRowsHighlight
             onSelectedRowsChange={handleSelectedRowsChange}
             progressPending={pending}

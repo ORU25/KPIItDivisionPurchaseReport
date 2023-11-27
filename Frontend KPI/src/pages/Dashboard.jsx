@@ -23,6 +23,9 @@ const Dashboard = () => {
 
   const [vendorType, setVendorType] = useState({});
 
+  const [sortedBuyers, setSortedBuyers] = useState({});
+  const [sortedRequesters, setSortedRequesters] = useState({});
+
   const token = localStorage.getItem("token");
 
   const fetchData = async () => {
@@ -46,8 +49,26 @@ const Dashboard = () => {
         labels: data.poYear.map((data) => data.year),
         datasets: [
           {
-            label: "Jumlah",
+            label: "Created",
             data: data.poYear.map((data) => data.po_year_count),
+            backgroundColor: "rgba(75, 192, 192, 0.7)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1,
+          },
+          {
+            label: "Success",
+            data: data.poYearSuccess.map((data) => data.po_year_success_count),
+
+            backgroundColor: "rgba(40, 167, 69, 0.7)",
+            borderColor: "rgba(40, 167, 69, 1)",
+            borderWidth: 1,
+          },
+          {
+            label: "Cancel",
+            data: data.poYearCancel.map((data) => data.po_year_cancel_count),
+            backgroundColor: "rgba(220, 53, 69, 0.7)",
+            borderColor: "rgba(220, 53, 69, 1)",
+            borderWidth: 1,
           },
         ],
       });
@@ -77,6 +98,9 @@ const Dashboard = () => {
           },
         ],
       });
+      setSortedRequesters(
+        data.prRequester.sort((a, b) => b.pr_request_count - a.pr_request_count)
+      );
     }
   };
   const prTypeHandler = () => {
@@ -93,7 +117,7 @@ const Dashboard = () => {
     }
   };
   const prBuyerHandler = () => {
-    if (data && data.prRequester) {
+    if (data && data.prBuyer) {
       setPrBuyer({
         labels: data.prBuyer.map((data) => data.buyer),
         datasets: [
@@ -103,6 +127,9 @@ const Dashboard = () => {
           },
         ],
       });
+      setSortedBuyers(
+        data.prBuyer.sort((a, b) => b.pr_buyer_count - a.pr_buyer_count)
+      );
     }
   };
   const poPricePerYearHandler = () => {
@@ -113,6 +140,9 @@ const Dashboard = () => {
           {
             label: "Jumlah",
             data: data.poYearPrice.map((data) => data.total_price_per_year),
+            backgroundColor: "rgba(29, 128, 14, 0.7)",
+            borderColor: "rgba(29, 128, 14, 1)",
+            borderWidth: 1,
           },
         ],
       });
@@ -133,17 +163,32 @@ const Dashboard = () => {
   };
   const vendorTypeHandler = () => {
     if (data && data.vendorTypePoCount) {
+      const years = data.vendorTypePoCount.years;
+      const datasets = [];
+
+      // Iterasi setiap vendor type
+      Object.keys(data.vendorTypePoCount).forEach((vendorType) => {
+        // Lewati kunci 'years'
+        if (vendorType === "years") return;
+
+        const dataForVendorType = data.vendorTypePoCount[vendorType].map(
+          (item) => item.count
+        );
+
+        datasets.push({
+          label: vendorType,
+          data: dataForVendorType,
+        });
+      });
+
       setVendorType({
-        labels: data.vendorTypePoCount.map((data) => data.vendor_type),
-        datasets: [
-          {
-            label: "Jumlah",
-            data: data.vendorTypePoCount.map((data) => data.po_count),
-          },
-        ],
+        labels: years,
+        datasets: datasets,
       });
     }
   };
+
+  // Function to generate random colors for the chart
 
   useEffect(() => {
     if (!token) {
@@ -166,7 +211,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <Layout title={"Dashboard"}>
+      <Layout title={"Dashboard IT Division Purchase Report"}>
         <section className="content">
           <div className="container-fluid">
             <div className="row">
@@ -265,36 +310,118 @@ const Dashboard = () => {
             </div>
 
             <div className="row">
-            <PieChart
+              <PieChart
                 chartData={prType}
                 title={"PR TYPE"}
                 classCustom={"col-12 col-md-4"}
-                cardColor={"danger"}
+                cardColor={"olive"}
               />
               <BarChart
-                axis={"y"}
                 chartData={vendorType}
                 title={"VENDOR TYPE"}
                 classCustom={"col-md-8 col-12"}
-                cardColor={"danger"}
-                barColor={"RGB(255, 99, 132, 0.5)"}
+                cardColor={"olive"}
                 style={{ height: "350px" }}
               />
-              
             </div>
+
             <div className="row">
               <DoughnutChart
                 chartData={prRequester}
                 title={"PR REQUESTER"}
-                classCustom={"col-md-6 col-xl-4 "}
-                cardColor={"danger"}
+                classCustom={"col-12  col-md-7 "}
+                cardColor={"orange"}
               />
+              <div className="col-md-5">
+                <div className="card card-orange">
+                  <div className="card-header">
+                    <h3 className="card-title">TOP REQUESTER</h3>
+                    <div className="card-tools"></div>
+                  </div>
+                  <div className="card-body">
+                    <table
+                      className="table table-sm"
+                      style={{ minHeight: "350px" }}
+                    >
+                      <thead>
+                        <tr>
+                          <th style={{ width: 10 }}>#</th>
+                          <th>Name</th>
+                          <th>PR</th>
+                        </tr>
+                      </thead>
+                      {sortedRequesters && sortedRequesters.length > 0 ? (
+                        <tbody>
+                          {sortedRequesters.map((data, key) => {
+                            return (
+                              <tr key={key}>
+                                <td>{key + 1}.</td>
+                                <td>{data.requested_by}</td>
+                                <td>{data.pr_request_count}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      ) : (
+                        <tbody>
+                          <tr>
+                            <td colSpan="2">No data available</td>
+                          </tr>
+                        </tbody>
+                      )}
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
               <DoughnutChart
                 chartData={prBuyer}
                 title={"PR BUYER"}
-                classCustom={"col-md-6 col-xl-8 "}
+                classCustom={"col-md-7 "}
                 cardColor={"danger"}
               />
+              <div className="col-md-5">
+                <div className="card card-danger">
+                  <div className="card-header">
+                    <h3 className="card-title">TOP BUYER</h3>
+                    <div className="card-tools"></div>
+                  </div>
+                  <div className="card-body">
+                    <table
+                      className="table table-sm"
+                      style={{ minHeight: "350px" }}
+                    >
+                      <thead>
+                        <tr>
+                          <th style={{ width: 10 }}>#</th>
+                          <th>Name</th>
+                          <th>PR</th>
+                        </tr>
+                      </thead>
+                      {sortedBuyers && sortedBuyers.length > 0 ? (
+                        <tbody>
+                          {sortedBuyers.map((data, key) => {
+                            return (
+                              <tr key={key}>
+                                <td>{key + 1}.</td>
+                                <td>{data.buyer}</td>
+                                <td>{data.pr_buyer_count}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      ) : (
+                        <tbody>
+                          <tr>
+                            <td colSpan="2">No data available</td>
+                          </tr>
+                        </tbody>
+                      )}
+                    </table>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>

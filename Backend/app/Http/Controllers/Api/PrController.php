@@ -11,12 +11,31 @@ class PrController extends Controller
 {
     public function index(){
         $pr = PR::all();
+        $pr->each(function ($pr){
+            $firstPrLine = $pr->pr_line()->first();
+
+            $pr->pr_created = $firstPrLine ? $firstPrLine->pr_created : null;
+            $pr->pr_approve_date = $firstPrLine ? $firstPrLine->pr_approve_date : null;
+            $pr->pr_cancel = $pr->po()->count() > 0 ? '0000-00-00' : ($firstPrLine ? $firstPrLine->pr_cancel : null);
+
+            // Hapus relasi prLines untuk menghindari penampilan data yang tidak diinginkan
+            unset($pr->prLines);
+        });
         return response()->json($pr);
     }
     
     public function pr_line($pr_no){
         $pr = PR::where('pr_no', $pr_no)->first();
 
+        
+            $firstPrLine = $pr->pr_line()->first();
+
+            $pr->pr_created = $firstPrLine ? $firstPrLine->pr_created : null;
+            $pr->pr_approve_date = $firstPrLine ? $firstPrLine->pr_approve_date : null;
+            $pr->pr_cancel = $pr->po()->count() > 0 ? '0000-00-00' : ($firstPrLine ? $firstPrLine->pr_cancel : null);
+            // Hapus relasi prLines untuk menghindari penampilan data yang tidak diinginkan
+            unset($pr->prLines);
+       
 
 
         if (!$pr) {
@@ -45,8 +64,20 @@ class PrController extends Controller
             'buyer' => $pr->buyer,
             'requested_by' => $pr->requested_by,
             'est_total_price_idr' => $formattedTotalPriceIDR,
+            'pr_created' => $pr->pr_created,
+            'pr_approve_date' => $pr->pr_approve_date,
+            'pr_cancel' => $pr->pr_cancel,
             'po' => $pr->po->map(function($po){
-                return $po->po_no;
+                return  [
+                    'po_no'=>$po->po_no,
+                    'po_created' => $po->po_created,
+                    'po_last_changed'=> $po->po_last_changed,
+                    'po_approve'=> $po->po_approve,
+                    'po_confirmation'=> $po->po_confirmation,
+                    'po_received'=> $po->po_received,
+                    'po_closed'=> $po->po_closed,
+                    'po_cancel'=> $po->po_cancel,
+                ];
             }),
             'pr_lines' => $prLines->map(function ($line) {
             return $line;

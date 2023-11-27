@@ -239,13 +239,39 @@ const PoLine = () => {
                         {data.pr &&
                           data.pr.map((pr, key) => {
                             return (
-                              <Link
-                                to={`/pr/${pr}`}
-                                key={key}
-                                className="btn btn-app bg-olive  rounded"
-                              >
-                                <i className="fas fa-receipt" /> {pr}
-                              </Link>
+                              <div key={key} className="col-12 col-md-6 col-lg-4  ">
+                                <Link
+                                  to={`/pr/${pr.pr_no}`}
+                                  className="btn btn-app bg-olive  rounded mx-auto" 
+                                >
+                                  <i className="fas fa-receipt" /> {pr.pr_no}
+                                </Link>
+                                <div className="timeline mt-2">
+                                  <TimeLineItem
+                                    icon={"fas fa-calendar-plus"}
+                                    color={"primary"}
+                                    text={"Created"}
+                                    data={pr.pr_created}
+                                  />
+                                  {pr.pr_approve_date === "0000-00-00" ? (
+                                    ""
+                                  ) : (
+                                    <TimeLineItem
+                                      icon={"fas fa-calendar-check"}
+                                      color={"success"}
+                                      text={"Approved"}
+                                      data={pr.pr_approve_date}
+                                    />
+                                  )}
+                                  <TimeLineItem
+                                    icon={"fas fa-inbox"}
+                                    color={"secondary"}
+                                    text= {"PO Created"}
+                                    data={data.po_created}
+                                    
+                                  />
+                                </div>
+                              </div>
                             );
                           })}
                       </div>

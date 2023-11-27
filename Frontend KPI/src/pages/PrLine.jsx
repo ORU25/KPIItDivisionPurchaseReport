@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Card2 from "../components/Card2";
+import TimeLineItem from "../components/TimeLineItem";
 
 const PrLine = () => {
   const { pr_no } = useParams();
@@ -66,7 +67,7 @@ const PrLine = () => {
                         <Card2
                           classes={"col-md-6 col-lg-4 col-12"}
                           color={"olive"}
-                          text={"Reqeusted by"}
+                          text={"Requested by"}
                           text2={data.requested_by}
                           icon={"fas fa-user-tie"}
                         />
@@ -85,14 +86,45 @@ const PrLine = () => {
                           icon={"fas fa-money-bill-wave"}
                         />
                       </div>
-
-                      {/* description */}
-                      <div className="card border border-dashed">
-                        <div className="card-header bg-gray">
-                          <h3 className="card-title">Description</h3>
-                          <div className="card-tools"></div>
+                      <div className="row">
+                        <div className="timeline mt-3 col-md-6 col-lg-4">
+                          <TimeLineItem
+                            icon={"fas fa-calendar-plus"}
+                            color={"primary"}
+                            text={"Created"}
+                            data={data.pr_created}
+                          />
+                          {data.pr_approve_date === "0000-00-00" ? (
+                            ""
+                          ) : (
+                            <TimeLineItem
+                              icon={"fas fa-calendar-check"}
+                              color={"success"}
+                              text={"Approved"}
+                              data={data.pr_approve_date}
+                            />
+                          )}
+                          {data.pr_cancel === "0000-00-00" ? (
+                            ""
+                          ) : (
+                            <TimeLineItem
+                              icon={"fas fa-calendar-times"}
+                              color={"red"}
+                              text={"Canceled"}
+                              data={data.pr_cancel}
+                            />
+                          )}
                         </div>
-                        <div className="card-body">{data.pr_desc}</div>
+                        {/* description */}
+                        <div className="col-12 col-md-6 col-xl-8">
+                          <div className="card border border-dashed">
+                            <div className="card-header bg-gray">
+                              <h3 className="card-title">Description</h3>
+                              <div className="card-tools"></div>
+                            </div>
+                            <div className="card-body">{data.pr_desc}</div>
+                          </div>
+                        </div>
                       </div>
 
                       {/* Table */}
@@ -159,13 +191,85 @@ const PrLine = () => {
                         {data.po &&
                           data.po.map((po, key) => {
                             return (
-                              <Link
-                                to={`/po/${po}`}
+                              <div
                                 key={key}
-                                className="btn btn-app bg-olive  rounded"
+                                className="col-12 col-md-6 col-lg-4"
                               >
-                                <i className="fas fa-inbox" /> {po}
-                              </Link>
+                                <Link
+                                  to={`/po/${po.po_no}`}
+                                  className="btn btn-app bg-olive  rounded"
+                                >
+                                  <i className="fas fa-inbox" /> {po.po_no}
+                                </Link>
+                                <div className="timeline mt-2">
+                                  <TimeLineItem
+                                    icon={"fas fa-calendar-plus"}
+                                    color={"primary"}
+                                    text={"Created"}
+                                    data={po.po_created}
+                                  />
+                                  {po.po_approve === "0000-00-00" ? (
+                                    ""
+                                  ) : (
+                                    <TimeLineItem
+                                      icon={"fas fa-calendar-check"}
+                                      color={"success"}
+                                      text={"Approved"}
+                                      data={po.po_approve}
+                                    />
+                                  )}
+                                  {po.po_confirmation === "0000-00-00" ? (
+                                    ""
+                                  ) : (
+                                    <TimeLineItem
+                                      icon={"fas fa-calendar-day"}
+                                      color={"olive"}
+                                      text={"Confirmation"}
+                                      data={po.po_confirmation}
+                                    />
+                                  )}
+                                  {po.po_received === "0000-00-00" ? (
+                                    ""
+                                  ) : (
+                                    <TimeLineItem
+                                      icon={"fas fa-calendar-week"}
+                                      color={"teal"}
+                                      text={"Received"}
+                                      data={po.po_received}
+                                    />
+                                  )}
+                                  {po.po_closed === "0000-00-00" ? (
+                                    ""
+                                  ) : (
+                                    <TimeLineItem
+                                      icon={"fas fa-calendar-minus"}
+                                      color={"warning"}
+                                      text={"Closed"}
+                                      data={po.po_closed}
+                                    />
+                                  )}
+                                  {po.po_last_changed === "0000-00-00" ? (
+                                    ""
+                                  ) : (
+                                    <TimeLineItem
+                                      icon={"fas fa-calendar-alt"}
+                                      color={"orange"}
+                                      text={"Last Changed"}
+                                      data={po.po_last_changed}
+                                    />
+                                  )}
+                                  {po.po_cancel === "0000-00-00" ? (
+                                    ""
+                                  ) : (
+                                    <TimeLineItem
+                                      icon={"fas fa-calendar-times"}
+                                      color={"red"}
+                                      text={"Canceled"}
+                                      data={po.po_cancel}
+                                    />
+                                  )}
+                                </div>
+                              </div>
                             );
                           })}
                       </div>

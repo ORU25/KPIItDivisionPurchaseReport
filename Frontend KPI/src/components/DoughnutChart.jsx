@@ -8,13 +8,13 @@ const DoughnutChart = ({ chartData, title, classCustom, cardColor }) => {
   if (!chartData || !chartData.labels || !chartData.datasets) {
     return (
       <div className={classCustom}>
-        <div className={`card card-${cardColor} border border-dashed`}>
+        <div className={`card card-${cardColor} border border-dashed`} >
           <div className="card-header">
             <h3 className="card-title">{title}</h3>
             <div className="card-tools"></div>
           </div>
-          <div className="card-body">
-            <div className="row d-flex justify-content-center align-items-center chart-loading">
+          <div className="card-body" style={{ height: "390px" }}>
+            <div className="row d-flex justify-content-center align-items-center chart-loading"  >
               <div
                 className={`spinner-border h3 text-${cardColor}`}
                 role="status"

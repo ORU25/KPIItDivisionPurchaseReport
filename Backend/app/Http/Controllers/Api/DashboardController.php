@@ -44,11 +44,43 @@ class DashboardController extends Controller
         $poLineSuccess = POLine::where('po_cancel_line', '0000-00-00')->count();
         $poLineCancel = POLine::where('po_cancel_line', '!=', '0000-00-00')->count();
 
-        $vendorTypePoCount = PO::select('vendor_type', DB::raw('COUNT(*) as po_count'))
-        ->groupBy('vendor_type')
-        ->get();
+        $vendorTypePoCount = PO::select(
+            'vendor_type',
+            DB::raw('YEAR(po_created) as year'),
+            DB::raw('COUNT(*) as po_count')
+        )
+            ->groupBy('vendor_type', 'year')
+            ->get();
+        
+        // Collect all unique years
+        $uniqueYears = $vendorTypePoCount->pluck('year')->unique()->sort();
+        
+        // Organize the data by vendor_type and year
+        $result = [
+            'years' => $uniqueYears->values()->toArray(),
+        ];
+        
+        foreach ($vendorTypePoCount as $vendor) {
+            $vendorType = $vendor->vendor_type;
+            $year = $vendor->year;
+            $poCount = $vendor->po_count;
+        
+            // Organize the data by vendor_type and year
+            if (!isset($result[$vendorType])) {
+                $result[$vendorType] = [];
+            }
+        
+            // Add the data for the current vendor and year
+            $result[$vendorType][] = [
+                'year' => $year,
+                'count' => $poCount,
+            ];
+        }
 
-        // $vendor =  PO::select('vendor', DB::raw('COUNT(*) as vendor_count'))->groupBy('vendor')->get();
+
+        // $vendorTypePoCount = PO::select('vendor_type', DB::raw('YEAR(po_created) as year'), DB::raw('COUNT(*) as po_count'))
+        // ->groupBy('vendor_type', 'year')
+        // ->get();
 
         $poYear = PO::select(
             DB::raw('YEAR(po_created) as year'), 
@@ -57,6 +89,22 @@ class DashboardController extends Controller
             ->groupBy(DB::raw('YEAR(po_created)'))
             ->get();
         
+
+        $poYearSuccess = PO::select(
+            DB::raw('YEAR(po_created) as year'),
+            DB::raw('COUNT(*) as po_year_success_count')
+        )
+            ->where('po_cancel', '=', '0000-00-00')
+            ->groupBy(DB::raw('YEAR(po_created)'))
+            ->get();
+        $poYearCancel = PO::select(
+            DB::raw('YEAR(po_created) as year'),
+            DB::raw('COUNT(*) as po_year_cancel_count')
+        )
+            ->where('po_cancel', '!=', '0000-00-00')
+            ->groupBy(DB::raw('YEAR(po_created)'))
+            ->get();
+
         $poYearPrice = Po::select(
             DB::raw('YEAR(po_created) as year'),
             // DB::raw('COUNT(DISTINCT p_o_s.id) as po_count'),
@@ -85,22 +133,21 @@ class DashboardController extends Controller
             'prBuyer' => $prBuyer,
             'prLineYear' => $prLineYear,
 
-             'totalPo' => $totalPo,
-             'poSuccess' => $poSuccess,
-             'poCancel' => $poCancel,
-             'totalPoLine' => $totalPoLine,
-             'poLineSuccess' => $poLineSuccess,
-             'poLineCancel' => $poLineCancel,
+            'totalPo' => $totalPo,
+            'poSuccess' => $poSuccess,
+            'poCancel' => $poCancel,
+            'totalPoLine' => $totalPoLine,
+            'poLineSuccess' => $poLineSuccess,
+            'poLineCancel' => $poLineCancel,
 
-             
+ 
+            'vendorTypePoCount' => $result,
 
-            
-             'vendorTypePoCount' => $vendorTypePoCount,
-            //  'vendor' => $vendor,
-
-             'poYear' => $poYear,
-             'poYearPrice'=> $poYearPrice,
-             'prYearEstPrice' => $prYearEstPrice,
+            'poYear' => $poYear,
+            'poYearSuccess' => $poYearSuccess,
+            'poYearCancel' => $poYearCancel,
+            'poYearPrice'=> $poYearPrice,
+            'prYearEstPrice' => $prYearEstPrice,
 
         ]);
     }
