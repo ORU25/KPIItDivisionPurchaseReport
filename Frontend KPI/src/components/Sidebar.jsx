@@ -9,7 +9,7 @@ const Sidebar = () => {
       <div>
         {/* Main Sidebar Container */}
         <aside className="main-sidebar sidebar-dark-white bg-success elevation-4">
-          <a className="brand-link ">
+          <a className="brand-link " href="/">
             <div className="row">
              
               <div className="col-10 col-lg-12">

@@ -329,8 +329,8 @@ const Dashboard = () => {
               <DoughnutChart
                 chartData={prRequester}
                 title={"PR REQUESTER"}
-                classCustom={"col-12  col-md-7 "}
-                cardColor={"orange"}
+                classCustom={"col-md-7"}
+                cardColor={"danger"}
               />
               <div className="col-md-5">
                 <div className="card card-orange">
@@ -338,7 +338,10 @@ const Dashboard = () => {
                     <h3 className="card-title">TOP REQUESTER</h3>
                     <div className="card-tools"></div>
                   </div>
-                  <div className="card-body">
+                  <div
+                    className="card-body"
+                    style={{ height: "390px", overflowY: "auto" }}
+                  >
                     <table
                       className="table table-sm"
                       style={{ minHeight: "350px" }}
@@ -387,11 +390,11 @@ const Dashboard = () => {
                     <h3 className="card-title">TOP BUYER</h3>
                     <div className="card-tools"></div>
                   </div>
-                  <div className="card-body">
-                    <table
-                      className="table table-sm"
-                      style={{ minHeight: "350px" }}
-                    >
+                  <div
+                    className="card-body"
+                    style={{ height: "390px", overflowY: "auto" }}
+                  >
+                    <table className="table table-sm">
                       <thead>
                         <tr>
                           <th style={{ width: 10 }}>#</th>

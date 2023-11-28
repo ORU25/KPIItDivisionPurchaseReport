@@ -15,6 +15,8 @@ const PrLine = () => {
   const Navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
+  const previous = useNavigate();
+
   const fetchData = async (pr_no) => {
     setIsLoading(true);
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -275,6 +277,15 @@ const PrLine = () => {
                       </div>
                     </>
                   )}
+                  <div className="float-right">
+                    <button
+                      onClick={() => previous(-1)}
+                      className="btn btn-info btn-block btn-sm"
+                    >
+                      <i className="fas fa-caret-left mr-2"></i>
+                      <span className="">Go back</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

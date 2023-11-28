@@ -54,6 +54,10 @@ const Pr = () => {
         item.buyer.toLowerCase().match(search.toLocaleLowerCase()) ||
         item.pr_type.toLowerCase().match(search.toLocaleLowerCase()) ||
         item.requested_by.toLowerCase().match(search.toLocaleLowerCase()) ||
+        numberFormatter(item.est_total_price_idr).toString().toLowerCase().match(search.toLocaleLowerCase()) ||
+        formatDate(item.pr_created).toString().toLowerCase().match(search.toLocaleLowerCase()) ||
+        formatDate(item.pr_approve_date).toString().toLowerCase().match(search.toLocaleLowerCase()) ||
+        formatDate(item.pr_cancel).toString().toLowerCase().match(search.toLocaleLowerCase()) ||
         item.pr_no.toString().toLowerCase().includes(search.toLowerCase())
       );
     });
@@ -79,6 +83,7 @@ const Pr = () => {
       pr_created: "Created",
       pr_approve_date: "Approved",
       pr_cancel: "Canceled",
+      est_total_price_idr: "Est Price IDR"
     };
 
     // Filter out the excluded columns
@@ -112,6 +117,9 @@ const Pr = () => {
     return `${day}-${month}-${year}`;
   };
 
+  const numberFormatter = (value) => {
+    return value.toLocaleString();
+  };
   const column = [
     {
       name: "No",
@@ -164,6 +172,13 @@ const Pr = () => {
       selector: "buyer",
       sortable: true,
       width: "200px",
+    },
+    {
+      name: "Est Price IDR",
+      selector: "est_total_price_idr",
+      sortable: true,
+      width: "150px",
+      cell: (row) => numberFormatter(row.est_total_price_idr),
     },
   ];
   return (

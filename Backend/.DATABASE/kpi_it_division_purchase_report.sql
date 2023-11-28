@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 21, 2023 at 08:52 AM
+-- Generation Time: Nov 28, 2023 at 06:36 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -63,7 +63,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (7, '2023_11_07_234036_create_p_r_lines_table', 1),
 (8, '2023_11_07_234043_create_p_o_s_table', 1),
 (9, '2023_11_07_234048_create_p_o_lines_table', 1),
-(10, '2023_11_09_105523_po_pr', 1);
+(10, '2023_11_09_105523_po_pr', 1),
+(11, '2023_11_28_000639_create_u_s_d_exchange_rates_table', 2);
 
 -- --------------------------------------------------------
 
@@ -3570,6 +3571,36 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `re
 (3, 'admin', 'admin1@gmail.com', NULL, '$2y$12$kV1Ck1VRx2S1T5qj/SSqdeHLNwe1dV50EwnqjdjigcFrYnRuB1g56', NULL, '2023-11-12 19:58:30', '2023-11-12 19:58:30'),
 (4, 'admin', 'admin3@gmail.com', NULL, '$2y$12$KPQuXPPcIdLZfziNhSNCNerqnktF.aln8agJGkwZU2Qafkmvnk6Mi', NULL, '2023-11-12 19:59:13', '2023-11-12 19:59:13');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `u_s_d_exchange_rates`
+--
+
+CREATE TABLE `u_s_d_exchange_rates` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `year` year(4) NOT NULL,
+  `exchange_rate` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `u_s_d_exchange_rates`
+--
+
+INSERT INTO `u_s_d_exchange_rates` (`id`, `year`, `exchange_rate`, `created_at`, `updated_at`) VALUES
+(1, 2014, 12440, NULL, NULL),
+(2, 2015, 13795, NULL, NULL),
+(3, 2016, 13436, NULL, NULL),
+(4, 2017, 13548, NULL, NULL),
+(5, 2018, 14481, NULL, NULL),
+(6, 2019, 13901, NULL, NULL),
+(7, 2020, 14105, NULL, NULL),
+(8, 2021, 14269, NULL, NULL),
+(9, 2022, 15731, NULL, NULL),
+(10, 2023, 15505, NULL, NULL);
+
 --
 -- Indexes for dumped tables
 --
@@ -3650,6 +3681,12 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
+-- Indexes for table `u_s_d_exchange_rates`
+--
+ALTER TABLE `u_s_d_exchange_rates`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -3663,7 +3700,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -3706,6 +3743,12 @@ ALTER TABLE `p_r_s`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `u_s_d_exchange_rates`
+--
+ALTER TABLE `u_s_d_exchange_rates`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables

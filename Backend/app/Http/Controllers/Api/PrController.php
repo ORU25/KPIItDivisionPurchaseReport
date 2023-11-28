@@ -11,16 +11,31 @@ class PrController extends Controller
 {
     public function index(){
         $pr = PR::all();
+
         $pr->each(function ($pr){
+
+           
+
             $firstPrLine = $pr->pr_line()->first();
 
             $pr->pr_created = $firstPrLine ? $firstPrLine->pr_created : null;
             $pr->pr_approve_date = $firstPrLine ? $firstPrLine->pr_approve_date : null;
             $pr->pr_cancel = $pr->po()->count() > 0 ? '0000-00-00' : ($firstPrLine ? $firstPrLine->pr_cancel : null);
+           
+            $totalPriceIDR = 0;
+            $prLines = $pr->pr_line()->get();
+            foreach ($prLines as $prLine) {
+                if ($prLine->est_currency === 'USD') {
+                    $totalPriceIDR += $prLine->est_price * $prLine->est_qty * 15000;
+                } else {
+                    $totalPriceIDR += $prLine->est_price * $prLine->est_qty ;
+                }
+            }
+            $pr->est_total_price_idr = $totalPriceIDR;
 
-            // Hapus relasi prLines untuk menghindari penampilan data yang tidak diinginkan
-            unset($pr->prLines);
+
         });
+
         return response()->json($pr);
     }
     
@@ -33,9 +48,11 @@ class PrController extends Controller
             $pr->pr_created = $firstPrLine ? $firstPrLine->pr_created : null;
             $pr->pr_approve_date = $firstPrLine ? $firstPrLine->pr_approve_date : null;
             $pr->pr_cancel = $pr->po()->count() > 0 ? '0000-00-00' : ($firstPrLine ? $firstPrLine->pr_cancel : null);
+
             // Hapus relasi prLines untuk menghindari penampilan data yang tidak diinginkan
             unset($pr->prLines);
        
+
 
 
         if (!$pr) {

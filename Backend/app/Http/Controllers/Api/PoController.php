@@ -10,6 +10,23 @@ class PoController extends Controller
 {
     public function index(){
         $po = PO::all();
+
+        $po->each(function ($po){
+            $poLines = $po->po_line()->get();
+
+            $totalPriceIDR = 0;
+
+            foreach ($poLines as $poLine) {
+                if ($poLine->total_price_currency === 'USD') {
+                    $totalPriceIDR += $poLine->total_price * 15000;
+                } else {
+                    $totalPriceIDR += $poLine->total_price;
+                }
+            }
+            $po->total_price_idr = $totalPriceIDR;
+
+        });
+
         return response()->json($po);
     }
 

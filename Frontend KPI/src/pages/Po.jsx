@@ -53,6 +53,12 @@ const Pr = () => {
         item.po_desc.toLowerCase().match(search.toLocaleLowerCase()) ||
         item.vendor.toLowerCase().match(search.toLocaleLowerCase()) ||
         item.vendor_type.toLowerCase().match(search.toLocaleLowerCase()) ||
+        numberFormatter(item.total_price_idr).toLowerCase().match(search.toLocaleLowerCase()) ||
+        formatDate(item.po_created).toLowerCase().match(search.toLocaleLowerCase()) ||
+        formatDate(item.po_approve).toLowerCase().match(search.toLocaleLowerCase()) ||
+        formatDate(item.po_received).toLowerCase().match(search.toLocaleLowerCase()) ||
+        formatDate(item.po_cancel).toLowerCase().match(search.toLocaleLowerCase()) ||
+        item.vendor_type.toLowerCase().match(search.toLocaleLowerCase()) ||
         item.po_no.toString().toLowerCase().includes(search.toLowerCase())
       );
     });
@@ -67,7 +73,7 @@ const Pr = () => {
     const doc = new jsPDF({ orientation: "landscape" });
 
     // Specify the columns to exclude from the PDF table
-    const excludedColumns = ["id", "created_at", "updated_at"];
+    const excludedColumns = ["id", "created_at", "updated_at","po_closed"];
 
     const columnMapping = {
       po_no: "No",
@@ -77,10 +83,11 @@ const Pr = () => {
       po_approve: "Approved",
       po_confirmation: "Confirmation",
       po_received: "Received",
-      po_closed: "Closed",
+      // po_closed: "Closed",
       po_cancel: "Canceled",
       vendor: "Vendor",
       vendor_type: "Vendor Type",
+      total_price_idr: "Total Price IDR",
     };
 
     // Filter out the excluded columns
@@ -109,6 +116,10 @@ const Pr = () => {
     doc.save("purchase_order.pdf");
   };
 
+  const numberFormatter = (value) => {
+    return value.toLocaleString();
+  };
+  
   const formatDate = (dateString) => {
     const [year, month, day] = dateString.split("-");
     return `${day}-${month}-${year}`;
@@ -143,7 +154,7 @@ const Pr = () => {
       cell: (row) => formatDate(row.po_approve),
     },
     {
-      name: "Canceled",
+      name: "Cancel",
       selector: "po_cancel",
       sortable: true,
       width: "150px",
@@ -160,6 +171,13 @@ const Pr = () => {
       selector: "vendor",
       sortable: true,
       width: "200px",
+    },
+    {
+      name: "Total Price IDR",
+      selector: "total_price_idr",
+      sortable: true,
+      width: "150px",
+      cell: (row) => numberFormatter(row.total_price_idr),
     },
   ];
 

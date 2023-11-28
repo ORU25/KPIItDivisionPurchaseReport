@@ -13,6 +13,7 @@ const PoLine = () => {
   const [data, setData] = useState([]);
 
   const Navigate = useNavigate();
+  const previous = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = async (po_no) => {
@@ -239,10 +240,13 @@ const PoLine = () => {
                         {data.pr &&
                           data.pr.map((pr, key) => {
                             return (
-                              <div key={key} className="col-12 col-md-6 col-lg-4  ">
+                              <div
+                                key={key}
+                                className="col-12 col-md-6 col-lg-4  "
+                              >
                                 <Link
                                   to={`/pr/${pr.pr_no}`}
-                                  className="btn btn-app bg-olive  rounded mx-auto" 
+                                  className="btn btn-app bg-olive  rounded mx-auto"
                                 >
                                   <i className="fas fa-receipt" /> {pr.pr_no}
                                 </Link>
@@ -266,9 +270,8 @@ const PoLine = () => {
                                   <TimeLineItem
                                     icon={"fas fa-inbox"}
                                     color={"secondary"}
-                                    text= {"PO Created"}
+                                    text={"PO Created"}
                                     data={data.po_created}
-                                    
                                   />
                                 </div>
                               </div>
@@ -277,6 +280,15 @@ const PoLine = () => {
                       </div>
                     </>
                   )}
+                  <div className="float-right">
+                    <button
+                      onClick={() => previous(-1)}
+                      className="btn btn-info btn-block btn-sm"
+                    >
+                      <i className="fas fa-caret-left mr-2"></i>
+                      <span className="">Go back</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
