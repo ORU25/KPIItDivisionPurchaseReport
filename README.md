@@ -19,5 +19,6 @@ Cara Menjalankan:
  
 untuk login gunakan
 
-email: admin@gmail.com
-password: 12345678
+- email: admin@gmail.com
+- password: 12345678
+  
