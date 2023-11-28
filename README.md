@@ -17,3 +17,7 @@ Cara Menjalankan:
 4. Buka vite.config.js lalu ubah host: dengan address computer anda jika mau dibuka di device lain. Jika tidak, host: bisa dihapus atau di comment
 5. Jalankan npm run dev
  
+untuk login gunakan
+
+email: admin@gmail.com
+password: 12345678
