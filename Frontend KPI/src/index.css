@@ -43,4 +43,15 @@
   background-color: rgb(27, 119, 1);
 }
 
+select {
+  /* Untuk Firefox */
+  appearance: none;
+  /* Untuk Chrome, Safari, dan Opera */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  /* Untuk Edge */
+  -ms-appearance: none;
+  /* Menonaktifkan panah di Internet Explorer 11 */
+  scrollbar-arrow-color: transparent;
+}
   

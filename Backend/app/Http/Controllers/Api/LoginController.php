@@ -36,7 +36,7 @@ class LoginController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Email atau Password Anda salah'
-            ], );
+            ], 401);
         }
 
         //if auth success

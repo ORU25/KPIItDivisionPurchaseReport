@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Card from "../components/Card";
 import PieChart from "../components/PieChart";
-import LineChart from "../components/LineChart";
 import BarChart from "../components/BarChart";
+import LineChart from "../components/LineChart";
 import DoughnutChart from "../components/DoughnutChart";
+import PrYearChart from "../components/prYearChart";
+import PoYearChart from "../components/poYearChart";
 
 const Dashboard = () => {
   const Navigate = useNavigate();
@@ -45,48 +47,92 @@ const Dashboard = () => {
 
   const poYearHandler = () => {
     if (data && data.poYear) {
+      const years = data.poYear.map((data) => data.year);
+  
+      const datasets = [
+        {
+          label: "Created",
+          data: years.map((year) => {
+            const yearData = data.poYear.find((item) => item.year === year);
+            return yearData ? yearData.po_year_count : 0;
+          }),
+          backgroundColor: "rgba(75, 192, 192, 0.7)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 2,
+        },
+        {
+          label: "Success",
+          data: years.map((year) => {
+            const yearData = data.poYearSuccess.find((item) => item.year === year);
+            return yearData ? yearData.po_year_success_count : 0;
+          }),
+          backgroundColor: "rgba(40, 167, 69, 0.7)",
+          borderColor: "rgba(40, 167, 69, 1)",
+          borderWidth: 2,
+        },
+        {
+          label: "Cancel",
+          data: years.map((year) => {
+            const yearData = data.poYearCancel.find((item) => item.year === year);
+            return yearData ? yearData.po_year_cancel_count : 0;
+          }),
+          backgroundColor: "rgba(220, 53, 69, 0.7)",
+          borderColor: "rgba(220, 53, 69, 1)",
+          borderWidth: 2,
+        },
+      ];
+  
       setPoYear({
-        labels: data.poYear.map((data) => data.year),
-        datasets: [
-          {
-            label: "Created",
-            data: data.poYear.map((data) => data.po_year_count),
-            backgroundColor: "rgba(75, 192, 192, 0.7)",
-            borderColor: "rgba(75, 192, 192, 1)",
-            borderWidth: 1,
-          },
-          {
-            label: "Success",
-            data: data.poYearSuccess.map((data) => data.po_year_success_count),
-
-            backgroundColor: "rgba(40, 167, 69, 0.7)",
-            borderColor: "rgba(40, 167, 69, 1)",
-            borderWidth: 1,
-          },
-          {
-            label: "Cancel",
-            data: data.poYearCancel.map((data) => data.po_year_cancel_count),
-            backgroundColor: "rgba(220, 53, 69, 0.7)",
-            borderColor: "rgba(220, 53, 69, 1)",
-            borderWidth: 1,
-          },
-        ],
+        labels: years,
+        datasets: datasets,
       });
     }
   };
+
   const prLineYearHandler = () => {
     if (data && data.prLineYear) {
+      const years = data.prLineYear.map((data) => data.year);
+  
+      const datasets = [
+        {
+          label: "Created",
+          data: years.map((year) => {
+            const yearData = data.prLineYear.find((item) => item.year === year);
+            return yearData ? yearData.pr_line_year_count : 0;
+          }),
+          backgroundColor: "rgba(75, 192, 192, 0.7)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 2,
+        },
+        {
+          label: "Success",
+          data: years.map((year) => {
+            const yearData = data.prLineYearSuccess.find((item) => item.year === year);
+            return yearData ? yearData.pr_line_year_success_count : 0;
+          }),
+          backgroundColor: "rgba(40, 167, 69, 0.7)",
+          borderColor: "rgba(40, 167, 69, 1)",
+          borderWidth: 2,
+        },
+        {
+          label: "Cancel",
+          data: years.map((year) => {
+            const yearData = data.prLineYearCancel.find((item) => item.year === year);
+            return yearData ? yearData.pr_line_year_cancel_count : 0;
+          }),
+          backgroundColor: "rgba(220, 53, 69, 0.7)",
+          borderColor: "rgba(220, 53, 69, 1)",
+          borderWidth: 2,
+        },
+      ];
+  
       setPrLineYear({
-        labels: data.prLineYear.map((data) => data.year),
-        datasets: [
-          {
-            label: "Jumlah",
-            data: data.prLineYear.map((data) => data.pr_line_year_count),
-          },
-        ],
+        labels: years,
+        datasets: datasets,
       });
     }
   };
+
   const prRequesterHandler = () => {
     if (data && data.prRequester) {
       setPrRequester({
@@ -103,6 +149,7 @@ const Dashboard = () => {
       );
     }
   };
+
   const prTypeHandler = () => {
     if (data && data.prType) {
       setPrType({
@@ -116,6 +163,7 @@ const Dashboard = () => {
       });
     }
   };
+
   const prBuyerHandler = () => {
     if (data && data.prBuyer) {
       setPrBuyer({
@@ -132,55 +180,63 @@ const Dashboard = () => {
       );
     }
   };
+
   const poPricePerYearHandler = () => {
     if (data && data.poYearPrice) {
       setPoYearPrice({
         labels: data.poYearPrice.map((data) => data.year),
         datasets: [
           {
-            label: "Jumlah",
+            label: "IDR",
             data: data.poYearPrice.map((data) => data.total_price_per_year),
             backgroundColor: "rgba(29, 128, 14, 0.7)",
             borderColor: "rgba(29, 128, 14, 1)",
-            borderWidth: 1,
+            borderWidth: 2,
           },
         ],
       });
     }
   };
+
   const prEstPricePerYearHandler = () => {
     if (data && data.prYearEstPrice) {
       setPrYearEstPrice({
         labels: data.prYearEstPrice.map((data) => data.year),
         datasets: [
           {
-            label: "Jumlah",
+            label: "IDR",
             data: data.prYearEstPrice.map((data) => data.total_est_price),
+            backgroundColor: "rgba(29, 128, 14, 0.7)",
+            borderColor: "rgba(29, 128, 14, 1)",
+            borderWidth: 2,
           },
         ],
       });
     }
   };
+
   const vendorTypeHandler = () => {
     if (data && data.vendorTypePoCount) {
       const years = data.vendorTypePoCount.years;
       const datasets = [];
-
-      // Iterasi setiap vendor type
+  
+      // Iterating over each vendor type
       Object.keys(data.vendorTypePoCount).forEach((vendorType) => {
-        // Lewati kunci 'years'
+        // Skip the key 'years'
         if (vendorType === "years") return;
-
-        const dataForVendorType = data.vendorTypePoCount[vendorType].map(
-          (item) => item.count
-        );
-
+  
+        const dataForVendorType = years.map((year) => {
+          const yearData = data.vendorTypePoCount[vendorType].find((item) => item.year === year);
+          return yearData ? yearData.count : 0;
+        });
+  
         datasets.push({
           label: vendorType,
           data: dataForVendorType,
+          borderWidth: 2,
         });
       });
-
+  
       setVendorType({
         labels: years,
         datasets: datasets,
@@ -282,25 +338,25 @@ const Dashboard = () => {
             </div>
 
             <div className="row">
-              <BarChart
+              <PoYearChart
                 chartData={poYear}
                 title={"PO PERTAHUN"}
                 classCustom={"col-md-6 "}
                 cardColor={"warning"}
               />
-              <BarChart
+              <PrYearChart
+                chartData={prLineYear}
+                title={"PR LINE PERTAHUN"}
+                classCustom={"col-md-6 "}
+                cardColor={"warning"}
+              />
+              <LineChart
                 chartData={poYearPrice}
                 title={"TOTAL PRICE PO PERTAHUN (IDR)"}
                 classCustom={"col-md-6 "}
                 cardColor={"warning"}
               />
 
-              <LineChart
-                chartData={prLineYear}
-                title={"PR LINE PERTAHUN"}
-                classCustom={"col-md-6 "}
-                cardColor={"warning"}
-              />
               <LineChart
                 chartData={prYearEstPrice}
                 title={"TOTAL ESTIMATE PRICE PR PERTAHUN (IDR)"}
@@ -330,7 +386,7 @@ const Dashboard = () => {
                 chartData={prRequester}
                 title={"PR REQUESTER"}
                 classCustom={"col-md-7"}
-                cardColor={"danger"}
+                cardColor={"orange"}
               />
               <div className="col-md-5">
                 <div className="card card-orange">
@@ -348,19 +404,31 @@ const Dashboard = () => {
                     >
                       <thead>
                         <tr>
-                          <th style={{ width: 10 }}>#</th>
-                          <th>Name</th>
-                          <th>PR</th>
+                          <th style={{ width: 10 }} className="text-center">
+                            #
+                          </th>
+                          <th className="text-center">Name</th>
+                          <th className="text-center">PR</th>
                         </tr>
                       </thead>
                       {sortedRequesters && sortedRequesters.length > 0 ? (
                         <tbody>
                           {sortedRequesters.map((data, key) => {
-                            return (
-                              <tr key={key}>
-                                <td>{key + 1}.</td>
+                            return key == 0 ? (
+                              <tr key={key} className="bg-warning">
+                                <td className="text-center">{key + 1}.</td>
                                 <td>{data.requested_by}</td>
-                                <td>{data.pr_request_count}</td>
+                                <td className="text-center">
+                                  {data.pr_request_count}
+                                </td>
+                              </tr>
+                            ) : (
+                              <tr key={key}>
+                                <td className="text-center">{key + 1}.</td>
+                                <td>{data.requested_by}</td>
+                                <td className="text-center">
+                                  {data.pr_request_count}
+                                </td>
                               </tr>
                             );
                           })}
@@ -377,6 +445,7 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
+
             <div className="row">
               <DoughnutChart
                 chartData={prBuyer}
@@ -397,19 +466,31 @@ const Dashboard = () => {
                     <table className="table table-sm">
                       <thead>
                         <tr>
-                          <th style={{ width: 10 }}>#</th>
-                          <th>Name</th>
-                          <th>PR</th>
+                          <th style={{ width: 10 }} className="text-center">
+                            #
+                          </th>
+                          <th className="text-center">Name</th>
+                          <th className="text-center">PR</th>
                         </tr>
                       </thead>
                       {sortedBuyers && sortedBuyers.length > 0 ? (
                         <tbody>
                           {sortedBuyers.map((data, key) => {
-                            return (
-                              <tr key={key}>
-                                <td>{key + 1}.</td>
+                            return key == 0 ? (
+                              <tr key={key} className="bg-warning ">
+                                <td className="text-center">{key + 1}.</td>
                                 <td>{data.buyer}</td>
-                                <td>{data.pr_buyer_count}</td>
+                                <td className="text-center">
+                                  {data.pr_buyer_count}
+                                </td>
+                              </tr>
+                            ) : (
+                              <tr key={key}>
+                                <td className="text-center">{key + 1}.</td>
+                                <td>{data.buyer}</td>
+                                <td className="text-center">
+                                  {data.pr_buyer_count}
+                                </td>
                               </tr>
                             );
                           })}

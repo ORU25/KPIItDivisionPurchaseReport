@@ -22,7 +22,7 @@ const App = () => {
         <Route path="/" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/pr" element={<Pr />} />
-        <Route path="/po" element={<Po />} />
+        <Route path="/po" element={<Po />}  />
         <Route path="/pr/:pr_no" element={<PrLine />} />
         <Route path="/po/:po_no" element={<PoLine />} />
       </Routes>

@@ -26,6 +26,9 @@ Route::post('/login', LoginController::class)->name('login');
 Route::post('/logout', LogoutController::class)->name('logout');
 
 Route::get('/dashboard', [DashboardController::class,'index'])->middleware('auth:api');
+Route::get('/dashboard/prYear/{year}', [DashboardController::class, 'prYear'])->middleware('auth:api');
+Route::get('/dashboard/poYear/{year}', [DashboardController::class, 'poYear'])->middleware('auth:api');
+
 Route::get('/pr', [PrController::class,'index'])->middleware('auth:api');
 Route::get('/pr/{pr_no}', [PrController::class,'pr_line'])->middleware('auth:api');
 

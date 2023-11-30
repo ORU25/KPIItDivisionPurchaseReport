@@ -23,8 +23,10 @@ const Login = () => {
     await axios
       .post(`${import.meta.env.VITE_BACKEND_API}/api/login`, formData)
       .then((response) => {
-        localStorage.setItem("token", response.data.token);
-        navigate("/dashboard");
+        if (response.data.token) {
+          localStorage.setItem("token", response.data.token);
+          navigate("/dashboard");
+        }
       })
       .catch((error) => {
         setValidation(error.response.data);

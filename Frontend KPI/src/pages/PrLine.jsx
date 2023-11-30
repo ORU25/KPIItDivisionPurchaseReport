@@ -44,7 +44,7 @@ const PrLine = () => {
       <Layout title={`Purchase Requisition No. ${pr_no}`}>
         <section className="content ">
           <div className="container-fluid">
-            <div className="card card-gray-dark">
+            <div className="card card-gray">
               <div className="card-header">
                 <h3 className="card-title">No. {data.pr_no}</h3>
                 <div className="card-tools"></div>
