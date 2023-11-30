@@ -24,7 +24,7 @@ const Login = () => {
       .post(`${import.meta.env.VITE_BACKEND_API}/api/login`, formData)
       .then((response) => {
         if (response.data.token) {
-          localStorage.setItem("token", response.data.token);
+          sessionStorage.setItem("token", response.data.token);
           navigate("/dashboard");
         }
       })
@@ -35,7 +35,7 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    if (sessionStorage.getItem("token")) {
       navigate("/dashboard");
     }
   }, []);

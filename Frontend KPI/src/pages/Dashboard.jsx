@@ -28,7 +28,7 @@ const Dashboard = () => {
   const [sortedBuyers, setSortedBuyers] = useState({});
   const [sortedRequesters, setSortedRequesters] = useState({});
 
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   const fetchData = async () => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -39,7 +39,7 @@ const Dashboard = () => {
       })
       .catch((error) => {
         if (error.response && error.response.status === 401) {
-          localStorage.removeItem("token");
+          sessionStorage.removeItem("token");
           Navigate("/");
         } else console.log("error fetching data", error);
       });

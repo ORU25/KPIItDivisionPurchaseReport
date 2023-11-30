@@ -9,7 +9,7 @@ import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 
 const Pr = () => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const Navigate = useNavigate();
   const [dataPr, setDataPr] = useState([]);
   const [pending, setPending] = useState(true);
@@ -32,7 +32,7 @@ const Pr = () => {
       return () => clearTimeout(timeout);
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
         Navigate("/");
       } else {
         console.log("Error fetching data:", error);

@@ -9,7 +9,7 @@ import TimeLineItem from "../components/TimeLineItem";
 const PrLine = () => {
   const { pr_no } = useParams();
 
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const [data, setData] = useState([]);
 
   const Navigate = useNavigate();

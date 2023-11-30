@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ title }) => {
   const Navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const [user, setUser] = useState("");
 
   const getUser = async () => {
@@ -22,7 +22,7 @@ const Navbar = ({ title }) => {
     await axios
       .post(`${import.meta.env.VITE_BACKEND_API}/api/logout`)
       .then(() => {
-        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
         Navigate("/");
       });
   };
@@ -43,6 +43,18 @@ const Navbar = ({ title }) => {
       {/* Right navbar links */}
       <ul className="navbar-nav ml-auto">
         {/* Notifications Dropdown Menu */}
+
+        <li className="nav-item">
+          <a
+            className="nav-link"
+            data-widget="fullscreen"
+            href="#"
+            role="button"
+          >
+            <i className="fas fa-expand-arrows-alt text-secondary" />
+          </a>
+        </li>
+
         <li className="nav-item dropdown">
           <a className="nav-link" data-toggle="dropdown">
             <i className="fas fa-user" />

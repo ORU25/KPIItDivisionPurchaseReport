@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import PrLine from "./pages/PrLine";
 import PoLine from "./pages/PoLine";
 const App = () => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const Navigate = useNavigate();
 
   useEffect(() => {

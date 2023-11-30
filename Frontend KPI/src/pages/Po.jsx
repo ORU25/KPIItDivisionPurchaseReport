@@ -9,7 +9,7 @@ import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 
 const Pr = () => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const Navigate = useNavigate();
   const [dataPo, setDataPo] = useState([]);
   const [pending, setPending] = useState(true);
@@ -32,7 +32,7 @@ const Pr = () => {
       return () => clearTimeout(timeout);
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
         Navigate("/");
       } else {
         console.log("Error fetching data:", error);
@@ -56,6 +56,7 @@ const Pr = () => {
         numberFormatter(item.total_price_idr).toLowerCase().match(search.toLocaleLowerCase()) ||
         formatDate(item.po_created).toLowerCase().match(search.toLocaleLowerCase()) ||
         formatDate(item.po_approve).toLowerCase().match(search.toLocaleLowerCase()) ||
+        formatDate(item.po_confirmation).toLowerCase().match(search.toLocaleLowerCase()) ||
         formatDate(item.po_received).toLowerCase().match(search.toLocaleLowerCase()) ||
         formatDate(item.po_cancel).toLowerCase().match(search.toLocaleLowerCase()) ||
         item.vendor_type.toLowerCase().match(search.toLocaleLowerCase()) ||
@@ -152,6 +153,20 @@ const Pr = () => {
       sortable: true,
       width: "150px",
       cell: (row) => formatDate(row.po_approve),
+    },
+    {
+      name: "Confirmed",
+      selector: "po_confirmation",
+      sortable: true,
+      width: "150px",
+      cell: (row) => formatDate(row.po_confirmation),
+    },
+    {
+      name: "Received",
+      selector: "po_received",
+      sortable: true,
+      width: "150px",
+      cell: (row) => formatDate(row.po_received),
     },
     {
       name: "Cancel",

@@ -20,7 +20,7 @@ const PrYearChart = ({
   const [prYear, setPrYear] = useState([]);
   const [year, setYear] = useState(null);
   const [data, setData] = useState([]);
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const Navigate = useNavigate();
 
   const fetchYear = async () => {
@@ -33,7 +33,7 @@ const PrYearChart = ({
         })
         .catch((error) => {
           if (error.response && error.response.status === 401) {
-            localStorage.removeItem("token");
+            sessionStorage.removeItem("token");
             Navigate("/");
           } else console.log("error fetching data", error);
         });
