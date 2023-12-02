@@ -1,34 +1,25 @@
 /* eslint-disable react/prop-types */
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-const Navbar = ({ title }) => {
-  const Navigate = useNavigate();
-  const token = sessionStorage.getItem("token");
-  const [user, setUser] = useState("");
 
-  const getUser = async () => {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    await axios
-      .get(`${import.meta.env.VITE_BACKEND_API}/api/user`)
-      .then((response) => {
-        setUser(response.data);
-      });
-  };
+const Navbar = ({ title, name, handleLogout}) => {
+
+  // const [user, setUser] = useState("");
+
+  // const getUser = async () => {
+  //   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  //   await axios
+  //     .get(`${import.meta.env.VITE_BACKEND_API}/api/user`)
+  //     .then((response) => {
+  //       setUser(response.data);
+  //     });
+  // };
 
   const logoutHandler = async () => {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    await axios
-      .post(`${import.meta.env.VITE_BACKEND_API}/api/logout`)
-      .then(() => {
-        sessionStorage.removeItem("token");
-        Navigate("/");
-      });
+    await handleLogout();
   };
-  useEffect(() => {
-    getUser();
-  }, []);
+  // useEffect(() => {
+  //   getUser();
+  // }, []);
   return (
     <nav className="main-header navbar navbar-expand navbar-white navbar-light">
       {/* Left navbar links */}
@@ -60,7 +51,7 @@ const Navbar = ({ title }) => {
             <i className="fas fa-user" />
           </a>
           <div className="dropdown-menu dropdown-menu-sm dropdown-menu-right">
-            <div className="dropdown-item dropdown-header ">{user.name}</div>
+            <div className="dropdown-item dropdown-header ">{name}</div>
             <div className="dropdown-divider" />
             <button
               onClick={logoutHandler}

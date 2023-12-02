@@ -54,4 +54,11 @@ select {
   /* Menonaktifkan panah di Internet Explorer 11 */
   scrollbar-arrow-color: transparent;
 }
+
+.error{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh; /* Optional: Set the height to 100% of the viewport height for full-page centering */
+}
   

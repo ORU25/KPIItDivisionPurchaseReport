@@ -1,6 +1,5 @@
 // eslint-disable-next-line no-unused-vars
 import { Link, useParams } from "react-router-dom";
-import Layout from "../components/Layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -40,7 +39,6 @@ const PoLine = () => {
   }, [token, Navigate]);
   return (
     <>
-      <Layout title={`Purchase Order No. ${po_no}`}>
         <section className="content ">
           <div className="container-fluid">
             <div className="card card-gray">
@@ -294,7 +292,6 @@ const PoLine = () => {
             </div>
           </div>
         </section>
-      </Layout>
     </>
   );
 };

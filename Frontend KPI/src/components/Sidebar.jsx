@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../assets/kpi_logo.png";
 
-const Sidebar = () => {
+const Sidebar = ({ role }) => {
   const location = useLocation();
   const currentPath = location.pathname;
   return (
@@ -11,7 +12,6 @@ const Sidebar = () => {
         <aside className="main-sidebar sidebar-dark-white bg-success elevation-4">
           <a className="brand-link " href="/">
             <div className="row">
-             
               <div className="col-10 col-lg-12">
                 <div className="col-12 d-flex justify-content-center align-items-center ">
                   <img
@@ -99,6 +99,24 @@ const Sidebar = () => {
                     </a>
                   </Link>
                 </li>
+                {role != "admin" ? (
+                  ""
+                ) : (
+                  <li className="nav-item mt-3">
+                    <Link to={"/users"}>
+                      <a
+                        className={`nav-link ${
+                          currentPath === "/users"
+                            ? "active text-success text-bold"
+                            : "text-white"
+                        }`}
+                      >
+                        <i className="nav-icon fas fa-users text-sm" />
+                        <p>Users</p>
+                      </a>
+                    </Link>
+                  </li>
+                )}
               </ul>
             </nav>
             {/* /.sidebar-menu */}

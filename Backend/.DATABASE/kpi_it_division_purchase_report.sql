@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 28, 2023 at 06:36 AM
+-- Generation Time: Dec 02, 2023 at 05:26 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -54,7 +54,6 @@ CREATE TABLE `migrations` (
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(1, '2014_10_12_000000_create_users_table', 1),
 (2, '2014_10_12_100000_create_password_reset_tokens_table', 1),
 (3, '2014_10_12_100000_create_password_resets_table', 1),
 (4, '2019_08_19_000000_create_failed_jobs_table', 1),
@@ -64,7 +63,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (8, '2023_11_07_234043_create_p_o_s_table', 1),
 (9, '2023_11_07_234048_create_p_o_lines_table', 1),
 (10, '2023_11_09_105523_po_pr', 1),
-(11, '2023_11_28_000639_create_u_s_d_exchange_rates_table', 2);
+(11, '2023_11_28_000639_create_u_s_d_exchange_rates_table', 2),
+(12, '2014_10_12_000000_create_users_table', 3);
 
 -- --------------------------------------------------------
 
@@ -3554,6 +3554,7 @@ CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` enum('admin','user') COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -3565,11 +3566,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'namaAdmin', 'admin@gmail.com', NULL, '$2y$12$yPeVPhUG4KlQvxuZ2iGNzeltwR7VKKMmexp96OXg3aynmRafPYSpC', NULL, '2023-11-09 05:56:34', '2023-11-09 05:56:34'),
-(2, 'admin2', 'admin2@gmail.com', NULL, '$2y$12$26bw.up2Wy9RLmSKbBI2ceSkLGaLMrklSQ1e80/seDNjt1Q9TM7py', NULL, '2023-11-12 04:45:36', '2023-11-12 04:45:36'),
-(3, 'admin', 'admin1@gmail.com', NULL, '$2y$12$kV1Ck1VRx2S1T5qj/SSqdeHLNwe1dV50EwnqjdjigcFrYnRuB1g56', NULL, '2023-11-12 19:58:30', '2023-11-12 19:58:30'),
-(4, 'admin', 'admin3@gmail.com', NULL, '$2y$12$KPQuXPPcIdLZfziNhSNCNerqnktF.aln8agJGkwZU2Qafkmvnk6Mi', NULL, '2023-11-12 19:59:13', '2023-11-12 19:59:13');
+INSERT INTO `users` (`id`, `name`, `email`, `role`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'admin', 'admin@gmail.com', 'admin', NULL, '$2y$12$bCU.Z41OQiggnQy3ckNSPOfL4Bwrh/sQRHUJnYZxl1eigTmAEPzEm', NULL, '2023-12-01 21:48:09', '2023-12-01 21:48:09'),
+(2, 'user', 'user@gmail.com', 'user', NULL, '$2y$12$HXL8T85zDL6NNwgaAPz4zO9OtFnvNivfwbPF7ndsm4zhg4kqj8KFe', NULL, '2023-12-01 21:58:57', '2023-12-01 21:58:57');
 
 -- --------------------------------------------------------
 
@@ -3700,7 +3699,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -3742,7 +3741,7 @@ ALTER TABLE `p_r_s`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `u_s_d_exchange_rates`

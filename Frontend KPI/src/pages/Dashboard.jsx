@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Layout from "../components/Layout";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Card from "../components/Card";
@@ -267,7 +266,6 @@ const Dashboard = () => {
 
   return (
     <>
-      <Layout title={"Dashboard IT Division Purchase Report"}>
         <section className="content">
           <div className="container-fluid">
             <div className="row">
@@ -509,7 +507,6 @@ const Dashboard = () => {
             </div>
           </div>
         </section>
-      </Layout>
     </>
   );
 };

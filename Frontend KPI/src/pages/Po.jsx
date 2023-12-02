@@ -1,5 +1,4 @@
 import axios from "axios";
-import Layout from "../components/Layout";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
@@ -74,7 +73,7 @@ const Pr = () => {
     const doc = new jsPDF({ orientation: "landscape" });
 
     // Specify the columns to exclude from the PDF table
-    const excludedColumns = ["id", "created_at", "updated_at","po_closed"];
+    const excludedColumns = ["id", "created_at", "updated_at"];
 
     const columnMapping = {
       po_no: "No",
@@ -84,7 +83,7 @@ const Pr = () => {
       po_approve: "Approved",
       po_confirmation: "Confirmation",
       po_received: "Received",
-      // po_closed: "Closed",
+      po_closed: "Closed",
       po_cancel: "Canceled",
       vendor: "Vendor",
       vendor_type: "Vendor Type",
@@ -197,7 +196,6 @@ const Pr = () => {
   ];
 
   return (
-    <Layout title={"Purchase Order"}>
       <section className="content">
         <div className="container-fluid overflow-auto">
           <DataTable
@@ -266,7 +264,6 @@ const Pr = () => {
           />
         </div>
       </section>
-    </Layout>
   );
 };
 

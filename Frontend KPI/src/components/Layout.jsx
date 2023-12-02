@@ -3,12 +3,12 @@ import Footer from "./Footer"
 import Navbar from "./Navbar"
 import Sidebar from "./Sidebar"
 
-const Layout = ({children, title}) => {
+const Layout = ({children, title, role, name, handleLogout}) => {
     
   return (
     <div>
-        <Navbar title={title}/>
-        <Sidebar/>
+        <Navbar title={title} name={name} handleLogout={handleLogout}/>
+        <Sidebar role={role}/>
         <main className="content-wrapper mt-3 bg-white min-vh-100 ">
             {children}
         </main>

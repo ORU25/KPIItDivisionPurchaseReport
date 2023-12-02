@@ -1,5 +1,4 @@
 import axios from "axios";
-import Layout from "../components/Layout";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
@@ -182,7 +181,6 @@ const Pr = () => {
     },
   ];
   return (
-    <Layout title={"Purchase Requisition"}>
       <section className="content">
         <div className="container-fluid overflow-auto">
           <DataTable
@@ -251,7 +249,6 @@ const Pr = () => {
           />
         </div>
       </section>
-    </Layout>
   );
 };
 

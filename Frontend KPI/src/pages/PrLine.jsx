@@ -1,5 +1,4 @@
 import { Link, useParams } from "react-router-dom";
-import Layout from "../components/Layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -41,7 +40,7 @@ const PrLine = () => {
   }, [token, Navigate]);
   return (
     <>
-      <Layout title={`Purchase Requisition No. ${pr_no}`}>
+     
         <section className="content ">
           <div className="container-fluid">
             <div className="card card-gray">
@@ -291,7 +290,6 @@ const PrLine = () => {
             </div>
           </div>
         </section>
-      </Layout>
     </>
   );
 };
