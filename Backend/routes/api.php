@@ -39,3 +39,6 @@ Route::get('/po/{po_no}', [PoController::class,'po_line'])->middleware('auth:api
 
 
 Route::get('/users', [UserController::class, 'index'])->middleware('auth:api','role:admin');
+Route::get('/user/{id}', [UserController::class, 'show'])->middleware('auth:api','role:admin');
+Route::post('/user/edit/{id}', [UserController::class, 'update'])->middleware('auth:api','role:admin');
+Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware('auth:api','role:admin');

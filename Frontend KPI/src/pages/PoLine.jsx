@@ -25,7 +25,7 @@ const PoLine = () => {
       setData(response.data);
     } catch (error) {
       if (error.response) {
-        Navigate("/po");
+        Navigate("/404");
       }
     }
     setIsLoading(false);

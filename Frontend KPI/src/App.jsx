@@ -8,8 +8,10 @@ import PrLine from "./pages/PrLine";
 import PoLine from "./pages/PoLine";
 import axios from "axios";
 import Layout from "./components/Layout";
-import Users from "./pages/Users";
+import Users from "./pages/User/Users";
+import UserCreate from "./pages/User/UserCreate";
 import NotFound from "./components/NotFound";
+import UserEdit from "./pages/User/UserEdit";
 const App = () => {
   const token = sessionStorage.getItem("token");
   const Navigate = useNavigate();
@@ -124,6 +126,38 @@ const App = () => {
                 handleLogout={handleLogout}
               >
                 <Users />
+              </Layout>
+            }
+          />
+        ) : (
+          ""
+        )}
+        {user.role == "admin" ? (
+          <Route
+            path="/user/create"
+            element={
+              <Layout
+                title={"Add Users"}
+                {...layoutProps}
+                handleLogout={handleLogout}
+              >
+                <UserCreate />
+              </Layout>
+            }
+          />
+        ) : (
+          ""
+        )}
+        {user.role == "admin" ? (
+          <Route
+            path="/user/edit/:id"
+            element={
+              <Layout
+                title={"Edit Users"}
+                {...layoutProps}
+                handleLogout={handleLogout}
+              >
+                <UserEdit />
               </Layout>
             }
           />

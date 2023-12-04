@@ -26,7 +26,7 @@ const PrLine = () => {
       setData(response.data);
     } catch (error) {
       if (error.response) {
-        Navigate("/pr");
+        Navigate("/404");
       }
     }
     setIsLoading(false);
