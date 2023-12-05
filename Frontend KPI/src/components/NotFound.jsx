@@ -1,6 +1,16 @@
 /* eslint-disable react/prop-types */
 
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 const NotFound = () => {
+  const token = sessionStorage.getItem("token")
+  const Navigate = useNavigate();
+  useEffect(()=>{
+    if (!token) {
+      Navigate("/")
+    }
+  },[])
   return (
     <div className="error">
       <div className="error-page">

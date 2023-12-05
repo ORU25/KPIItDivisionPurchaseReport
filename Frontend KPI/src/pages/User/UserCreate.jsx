@@ -92,35 +92,6 @@ const UserCreate = () => {
                     </div>
                     <div className="col-md-6">
                       <div className="form-group ">
-                        <label htmlFor="exampleInputPassword1">Password</label>
-                        <input
-                          required
-                          type="password"
-                          value={password}
-                          className="form-control"
-                          id="exampleInputPassword1"
-                          placeholder="Password"
-                          onChange={(e) => setPassword(e.target.value)}
-                        />
-                      </div>
-                      {validation.password && (
-                        <div className="alert alert-danger alert-dismissible fade show">
-                          {validation.password[0]}
-                          <button
-                            type="button"
-                            className="close hover-alert"
-                            data-dismiss="alert"
-                            aria-label="Close"
-                          >
-                            <span aria-hidden="true">×</span>
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <div className="form-group ">
                         <label htmlFor="exampleInputEmail1">
                           Email address
                         </label>
@@ -136,6 +107,37 @@ const UserCreate = () => {
                       {validation.email && (
                         <div className="alert alert-danger alert-dismissible fade show">
                           {validation.email[0]}
+                          <button
+                            type="button"
+                            className="close hover-alert"
+                            data-dismiss="alert"
+                            aria-label="Close"
+                          >
+                            <span aria-hidden="true">×</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    
+                  </div>
+                  <div className="row">
+                    
+                    <div className="col-md-6">
+                      <div className="form-group ">
+                        <label htmlFor="exampleInputPassword1">Password</label>
+                        <input
+                          required
+                          type="password"
+                          value={password}
+                          className="form-control"
+                          id="exampleInputPassword1"
+                          placeholder="Password"
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
+                      </div>
+                      {validation.password && (
+                        <div className="alert alert-danger alert-dismissible fade show">
+                          {validation.password[0]}
                           <button
                             type="button"
                             className="close hover-alert"

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\PO;
+use App\Models\USDExchangeRate;
 use Illuminate\Http\Request;
 
 class PoController extends Controller
@@ -18,7 +19,12 @@ class PoController extends Controller
 
             foreach ($poLines as $poLine) {
                 if ($poLine->total_price_currency === 'USD') {
-                    $totalPriceIDR += $poLine->total_price * 15000;
+                    // Fetch the exchange rate for the corresponding year
+                    $exchangeRate = USDExchangeRate::whereYear('year', date('Y', strtotime($po->po_created)))
+                        ->first(['exchange_rate'])->exchange_rate;
+        
+                    // Calculate the total price in IDR based on the exchange rate
+                    $totalPriceIDR += $poLine->total_price * $exchangeRate;
                 } else {
                     $totalPriceIDR += $poLine->total_price;
                 }
@@ -43,7 +49,12 @@ class PoController extends Controller
 
         foreach ($poLines as $poLine) {
             if ($poLine->total_price_currency === 'USD') {
-                $totalPriceIDR += $poLine->total_price * 15000;
+                // Fetch the exchange rate for the corresponding year
+                $exchangeRate = USDExchangeRate::whereYear('year', date('Y', strtotime($po->po_created)))
+                    ->first(['exchange_rate'])->exchange_rate;
+    
+                // Calculate the total price in IDR based on the exchange rate
+                $totalPriceIDR += $poLine->total_price * $exchangeRate;
             } else {
                 $totalPriceIDR += $poLine->total_price;
             }

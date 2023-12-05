@@ -47,7 +47,7 @@ const Dashboard = () => {
   const poYearHandler = () => {
     if (data && data.poYear) {
       const years = data.poYear.map((data) => data.year);
-  
+
       const datasets = [
         {
           label: "Created",
@@ -62,7 +62,9 @@ const Dashboard = () => {
         {
           label: "Success",
           data: years.map((year) => {
-            const yearData = data.poYearSuccess.find((item) => item.year === year);
+            const yearData = data.poYearSuccess.find(
+              (item) => item.year === year
+            );
             return yearData ? yearData.po_year_success_count : 0;
           }),
           backgroundColor: "rgba(40, 167, 69, 0.7)",
@@ -72,7 +74,9 @@ const Dashboard = () => {
         {
           label: "Cancel",
           data: years.map((year) => {
-            const yearData = data.poYearCancel.find((item) => item.year === year);
+            const yearData = data.poYearCancel.find(
+              (item) => item.year === year
+            );
             return yearData ? yearData.po_year_cancel_count : 0;
           }),
           backgroundColor: "rgba(220, 53, 69, 0.7)",
@@ -80,7 +84,7 @@ const Dashboard = () => {
           borderWidth: 2,
         },
       ];
-  
+
       setPoYear({
         labels: years,
         datasets: datasets,
@@ -91,7 +95,7 @@ const Dashboard = () => {
   const prLineYearHandler = () => {
     if (data && data.prLineYear) {
       const years = data.prLineYear.map((data) => data.year);
-  
+
       const datasets = [
         {
           label: "Created",
@@ -106,7 +110,9 @@ const Dashboard = () => {
         {
           label: "Success",
           data: years.map((year) => {
-            const yearData = data.prLineYearSuccess.find((item) => item.year === year);
+            const yearData = data.prLineYearSuccess.find(
+              (item) => item.year === year
+            );
             return yearData ? yearData.pr_line_year_success_count : 0;
           }),
           backgroundColor: "rgba(40, 167, 69, 0.7)",
@@ -116,7 +122,9 @@ const Dashboard = () => {
         {
           label: "Cancel",
           data: years.map((year) => {
-            const yearData = data.prLineYearCancel.find((item) => item.year === year);
+            const yearData = data.prLineYearCancel.find(
+              (item) => item.year === year
+            );
             return yearData ? yearData.pr_line_year_cancel_count : 0;
           }),
           backgroundColor: "rgba(220, 53, 69, 0.7)",
@@ -124,7 +132,7 @@ const Dashboard = () => {
           borderWidth: 2,
         },
       ];
-  
+
       setPrLineYear({
         labels: years,
         datasets: datasets,
@@ -218,24 +226,26 @@ const Dashboard = () => {
     if (data && data.vendorTypePoCount) {
       const years = data.vendorTypePoCount.years;
       const datasets = [];
-  
+
       // Iterating over each vendor type
       Object.keys(data.vendorTypePoCount).forEach((vendorType) => {
         // Skip the key 'years'
         if (vendorType === "years") return;
-  
+
         const dataForVendorType = years.map((year) => {
-          const yearData = data.vendorTypePoCount[vendorType].find((item) => item.year === year);
+          const yearData = data.vendorTypePoCount[vendorType].find(
+            (item) => item.year === year
+          );
           return yearData ? yearData.count : 0;
         });
-  
+
         datasets.push({
           label: vendorType,
           data: dataForVendorType,
           borderWidth: 2,
         });
       });
-  
+
       setVendorType({
         labels: years,
         datasets: datasets,
@@ -266,247 +276,249 @@ const Dashboard = () => {
 
   return (
     <>
-        <section className="content">
-          <div className="container-fluid">
-            <div className="row">
-              <Card
-                color={"bg-success"}
-                mainData={data.prSuccess}
-                divider={data.totalPr}
-                title={"PR Success"}
-                icon={"fas fa-check-circle"}
-                classes={"col-lg-3 col-6"}
-              />
-              <Card
-                color={"bg-danger"}
-                mainData={data.prCancel}
-                divider={data.totalPr}
-                title={"PR Cancel"}
-                icon={"fas fa-times-circle"}
-                classes={"col-lg-3 col-6"}
-              />
-              <Card
-                color={"bg-info"}
-                mainData={data.totalPr}
-                title={"Total PR"}
-                icon={"fas fa-receipt"}
-                classes={"col-lg-3 col-6"}
-              />
-              <Card
-                color={"bg-secondary"}
-                mainData={data.totalPrLine}
-                title={"Total PR Line"}
-                icon={"fas fa-list-alt"}
-                classes={"col-lg-3 col-6"}
-              />
-            </div>
+      <section className="content">
+        <div className="container-fluid">
+          <div className="row">
+            <Card
+              color={"bg-success"}
+              mainData={data.prSuccess}
+              divider={data.totalPr}
+              title={"PR Success"}
+              icon={"fas fa-check-circle"}
+              classes={"col-lg-3 col-6"}
+            />
+            <Card
+              color={"bg-danger"}
+              mainData={data.prCancel}
+              divider={data.totalPr}
+              title={"PR Cancel"}
+              icon={"fas fa-times-circle"}
+              classes={"col-lg-3 col-6"}
+            />
+            <Card
+              color={"bg-info"}
+              mainData={data.totalPr}
+              title={"Total PR"}
+              icon={"fas fa-receipt"}
+              classes={"col-lg-3 col-6"}
+            />
+            <Card
+              color={"bg-secondary"}
+              mainData={data.totalPrLine}
+              title={"Total PR Line"}
+              icon={"fas fa-list-alt"}
+              classes={"col-lg-3 col-6"}
+            />
+          </div>
 
-            <div className="row">
-              <Card
-                color={"bg-success"}
-                mainData={data.poSuccess}
-                divider={data.totalPo}
-                title={"PO Success"}
-                icon={"far fa-check-circle"}
-                classes={"col-lg-3 col-6"}
-              />
-              <Card
-                color={"bg-danger"}
-                mainData={data.poCancel}
-                divider={data.totalPo}
-                title={"PO Cancel"}
-                icon={"far fa-times-circle"}
-                classes={"col-lg-3 col-6"}
-              />
+          <div className="row">
+            <Card
+              color={"bg-success"}
+              mainData={data.poSuccess}
+              divider={data.totalPo}
+              title={"PO Success"}
+              icon={"far fa-check-circle"}
+              classes={"col-lg-3 col-6"}
+            />
+            <Card
+              color={"bg-danger"}
+              mainData={data.poCancel}
+              divider={data.totalPo}
+              title={"PO Cancel"}
+              icon={"far fa-times-circle"}
+              classes={"col-lg-3 col-6"}
+            />
 
-              <Card
-                color={"bg-info"}
-                mainData={data.totalPo}
-                title={"Total PO"}
-                icon={"fas fa-file-invoice"}
-                classes={"col-lg-3 col-6"}
-              />
-              <Card
-                color={"bg-secondary"}
-                mainData={data.totalPoLine}
-                title={"Total PO Line"}
-                icon={"far fa-list-alt"}
-                classes={"col-lg-3 col-6"}
-              />
-            </div>
+            <Card
+              color={"bg-info"}
+              mainData={data.totalPo}
+              title={"Total PO"}
+              icon={"fas fa-file-invoice"}
+              classes={"col-lg-3 col-6"}
+            />
+            <Card
+              color={"bg-secondary"}
+              mainData={data.totalPoLine}
+              title={"Total PO Line"}
+              icon={"far fa-list-alt"}
+              classes={"col-lg-3 col-6"}
+            />
+          </div>
 
-            <div className="row">
-              <PoYearChart
-                chartData={poYear}
-                title={"PO PERTAHUN"}
-                classCustom={"col-md-6 "}
-                cardColor={"warning"}
-              />
-              <PrYearChart
-                chartData={prLineYear}
-                title={"PR LINE PERTAHUN"}
-                classCustom={"col-md-6 "}
-                cardColor={"warning"}
-              />
-              <LineChart
-                chartData={poYearPrice}
-                title={"TOTAL PRICE PO PERTAHUN (IDR)"}
-                classCustom={"col-md-6 "}
-                cardColor={"warning"}
-              />
+          <div className="row">
+            <PrYearChart
+              chartData={prLineYear}
+              title={"PR LINE PERTAHUN"}
+              classCustom={"col-md-6 "}
+              cardColor={"warning"}
+            />
+            
+            <PoYearChart
+              chartData={poYear}
+              title={"PO PERTAHUN"}
+              classCustom={"col-md-6 "}
+              cardColor={"warning"}
+            />
 
-              <LineChart
-                chartData={prYearEstPrice}
-                title={"TOTAL ESTIMATE PRICE PR PERTAHUN (IDR)"}
-                classCustom={"col-md-6 "}
-                cardColor={"warning"}
-              />
-            </div>
+            <LineChart
+              chartData={prYearEstPrice}
+              title={"TOTAL ESTIMATE PRICE PR PERTAHUN (IDR)"}
+              classCustom={"col-md-6 "}
+              cardColor={"warning"}
+            />
 
-            <div className="row">
-              <PieChart
-                chartData={prType}
-                title={"PR TYPE"}
-                classCustom={"col-12 col-md-4"}
-                cardColor={"olive"}
-              />
-              <BarChart
-                chartData={vendorType}
-                title={"VENDOR TYPE"}
-                classCustom={"col-md-8 col-12"}
-                cardColor={"olive"}
-                style={{ height: "350px" }}
-              />
-            </div>
+            <LineChart
+              chartData={poYearPrice}
+              title={"TOTAL PRICE PO PERTAHUN (IDR)"}
+              classCustom={"col-md-6 "}
+              cardColor={"warning"}
+            />
+          </div>
 
-            <div className="row">
-              <DoughnutChart
-                chartData={prRequester}
-                title={"PR REQUESTER"}
-                classCustom={"col-md-7"}
-                cardColor={"orange"}
-              />
-              <div className="col-md-5">
-                <div className="card card-orange">
-                  <div className="card-header">
-                    <h3 className="card-title">TOP REQUESTER</h3>
-                    <div className="card-tools"></div>
-                  </div>
-                  <div
-                    className="card-body"
-                    style={{ height: "390px", overflowY: "auto" }}
-                  >
-                    <table
-                      className="table table-sm"
-                      style={{ minHeight: "350px" }}
-                    >
-                      <thead>
-                        <tr>
-                          <th style={{ width: 10 }} className="text-center">
-                            #
-                          </th>
-                          <th className="text-center">Name</th>
-                          <th className="text-center">PR</th>
-                        </tr>
-                      </thead>
-                      {sortedRequesters && sortedRequesters.length > 0 ? (
-                        <tbody>
-                          {sortedRequesters.map((data, key) => {
-                            return key == 0 ? (
-                              <tr key={key} className="bg-warning">
-                                <td className="text-center">{key + 1}.</td>
-                                <td>{data.requested_by}</td>
-                                <td className="text-center">
-                                  {data.pr_request_count}
-                                </td>
-                              </tr>
-                            ) : (
-                              <tr key={key}>
-                                <td className="text-center">{key + 1}.</td>
-                                <td>{data.requested_by}</td>
-                                <td className="text-center">
-                                  {data.pr_request_count}
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      ) : (
-                        <tbody>
-                          <tr>
-                            <td colSpan="2">No data available</td>
-                          </tr>
-                        </tbody>
-                      )}
-                    </table>
-                  </div>
+          <div className="row">
+            <PieChart
+              chartData={prType}
+              title={"PR TYPE"}
+              classCustom={"col-12 col-md-4"}
+              cardColor={"olive"}
+            />
+            <BarChart
+              chartData={vendorType}
+              title={"VENDOR TYPE"}
+              classCustom={"col-md-8 col-12"}
+              cardColor={"olive"}
+              style={{ height: "350px" }}
+            />
+          </div>
+
+          <div className="row">
+            <DoughnutChart
+              chartData={prRequester}
+              title={"PR REQUESTER"}
+              classCustom={"col-md-7"}
+              cardColor={"orange"}
+            />
+            <div className="col-md-5">
+              <div className="card card-orange">
+                <div className="card-header">
+                  <h3 className="card-title">TOP REQUESTER</h3>
+                  <div className="card-tools"></div>
                 </div>
-              </div>
-            </div>
-
-            <div className="row">
-              <DoughnutChart
-                chartData={prBuyer}
-                title={"PR BUYER"}
-                classCustom={"col-md-7 "}
-                cardColor={"danger"}
-              />
-              <div className="col-md-5">
-                <div className="card card-danger">
-                  <div className="card-header">
-                    <h3 className="card-title">TOP BUYER</h3>
-                    <div className="card-tools"></div>
-                  </div>
-                  <div
-                    className="card-body"
-                    style={{ height: "390px", overflowY: "auto" }}
+                <div
+                  className="card-body"
+                  style={{ height: "390px", overflowY: "auto" }}
+                >
+                  <table
+                    className="table table-sm"
+                    style={{ minHeight: "350px" }}
                   >
-                    <table className="table table-sm">
-                      <thead>
+                    <thead>
+                      <tr>
+                        <th style={{ width: 10 }} className="text-center">
+                          #
+                        </th>
+                        <th className="text-center">Name</th>
+                        <th className="text-center">PR</th>
+                      </tr>
+                    </thead>
+                    {sortedRequesters && sortedRequesters.length > 0 ? (
+                      <tbody>
+                        {sortedRequesters.map((data, key) => {
+                          return key == 0 ? (
+                            <tr key={key} className="bg-warning">
+                              <td className="text-center">{key + 1}.</td>
+                              <td>{data.requested_by}</td>
+                              <td className="text-center">
+                                {data.pr_request_count}
+                              </td>
+                            </tr>
+                          ) : (
+                            <tr key={key}>
+                              <td className="text-center">{key + 1}.</td>
+                              <td>{data.requested_by}</td>
+                              <td className="text-center">
+                                {data.pr_request_count}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    ) : (
+                      <tbody>
                         <tr>
-                          <th style={{ width: 10 }} className="text-center">
-                            #
-                          </th>
-                          <th className="text-center">Name</th>
-                          <th className="text-center">PR</th>
+                          <td colSpan="2">No data available</td>
                         </tr>
-                      </thead>
-                      {sortedBuyers && sortedBuyers.length > 0 ? (
-                        <tbody>
-                          {sortedBuyers.map((data, key) => {
-                            return key == 0 ? (
-                              <tr key={key} className="bg-warning ">
-                                <td className="text-center">{key + 1}.</td>
-                                <td>{data.buyer}</td>
-                                <td className="text-center">
-                                  {data.pr_buyer_count}
-                                </td>
-                              </tr>
-                            ) : (
-                              <tr key={key}>
-                                <td className="text-center">{key + 1}.</td>
-                                <td>{data.buyer}</td>
-                                <td className="text-center">
-                                  {data.pr_buyer_count}
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      ) : (
-                        <tbody>
-                          <tr>
-                            <td colSpan="2">No data available</td>
-                          </tr>
-                        </tbody>
-                      )}
-                    </table>
-                  </div>
+                      </tbody>
+                    )}
+                  </table>
                 </div>
               </div>
             </div>
           </div>
-        </section>
+
+          <div className="row">
+            <DoughnutChart
+              chartData={prBuyer}
+              title={"PR BUYER"}
+              classCustom={"col-md-7 "}
+              cardColor={"danger"}
+            />
+            <div className="col-md-5">
+              <div className="card card-danger">
+                <div className="card-header">
+                  <h3 className="card-title">TOP BUYER</h3>
+                  <div className="card-tools"></div>
+                </div>
+                <div
+                  className="card-body"
+                  style={{ height: "390px", overflowY: "auto" }}
+                >
+                  <table className="table table-sm">
+                    <thead>
+                      <tr>
+                        <th style={{ width: 10 }} className="text-center">
+                          #
+                        </th>
+                        <th className="text-center">Name</th>
+                        <th className="text-center">PR</th>
+                      </tr>
+                    </thead>
+                    {sortedBuyers && sortedBuyers.length > 0 ? (
+                      <tbody>
+                        {sortedBuyers.map((data, key) => {
+                          return key == 0 ? (
+                            <tr key={key} className="bg-warning ">
+                              <td className="text-center">{key + 1}.</td>
+                              <td>{data.buyer}</td>
+                              <td className="text-center">
+                                {data.pr_buyer_count}
+                              </td>
+                            </tr>
+                          ) : (
+                            <tr key={key}>
+                              <td className="text-center">{key + 1}.</td>
+                              <td>{data.buyer}</td>
+                              <td className="text-center">
+                                {data.pr_buyer_count}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    ) : (
+                      <tbody>
+                        <tr>
+                          <td colSpan="2">No data available</td>
+                        </tr>
+                      </tbody>
+                    )}
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 };

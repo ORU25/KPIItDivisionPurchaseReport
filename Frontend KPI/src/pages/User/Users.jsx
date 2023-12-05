@@ -59,6 +59,7 @@ const Users = () => {
       name: "Email",
       selector: "email",
       sortable: true,
+      width: "250px",
     },
     {
       name: "Role",

@@ -68,7 +68,7 @@ const UserEdit = () => {
       <div className="container-fluid overflow-auto">
         <div className="card card-secondary">
           <div className="card-header">
-            <h3 className="card-title">Edit User</h3>
+            <h3 className="card-title">Edit <b>{email}</b></h3>
           </div>
           {/* /.card-header */}
           {/* form start */}
@@ -121,34 +121,7 @@ const UserEdit = () => {
                         </div>
                       )}
                     </div>
-                    <div className="col-md-6">
-                      <div className="form-group ">
-                        <label htmlFor="exampleInputPassword1">Password</label>
-                        <input
-                          type="password"
-                          value={password}
-                          required
-                          className="form-control"
-                          placeholder="Password"
-                          onChange={(e) => setPassword(e.target.value)}
-                        />
-                      </div>
-                      {validation.password && (
-                        <div className="alert alert-danger alert-dismissible fade show">
-                          {validation.password[0]}
-                          <button
-                            type="button"
-                            className="close hover-alert"
-                            data-dismiss="alert"
-                            aria-label="Close"
-                          >
-                            <span aria-hidden="true">×</span>
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="row">
+
                     <div className="col-md-6">
                       <div className="form-group ">
                         <label htmlFor="exampleInputEmail1">
@@ -166,6 +139,34 @@ const UserEdit = () => {
                       {validation.email && (
                         <div className="alert alert-danger alert-dismissible fade show">
                           {validation.email[0]}
+                          <button
+                            type="button"
+                            className="close hover-alert"
+                            data-dismiss="alert"
+                            aria-label="Close"
+                          >
+                            <span aria-hidden="true">×</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="form-group ">
+                        <label htmlFor="exampleInputPassword1">Password</label>
+                        <input
+                          type="password"
+                          value={password}
+                          required
+                          className="form-control"
+                          placeholder="Password"
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
+                      </div>
+                      {validation.password && (
+                        <div className="alert alert-danger alert-dismissible fade show">
+                          {validation.password[0]}
                           <button
                             type="button"
                             className="close hover-alert"

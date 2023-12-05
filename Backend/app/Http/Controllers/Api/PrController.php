@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\PR;
 use App\Models\PRLine;
+use App\Models\USDExchangeRate;
 use Illuminate\Http\Request;
 
 class PrController extends Controller
@@ -26,9 +27,14 @@ class PrController extends Controller
             $prLines = $pr->pr_line()->get();
             foreach ($prLines as $prLine) {
                 if ($prLine->est_currency === 'USD') {
-                    $totalPriceIDR += $prLine->est_price * $prLine->est_qty * 15000;
+                    // Fetch the exchange rate for the corresponding year
+                    $exchangeRate = USDExchangeRate::whereYear('year', date('Y', strtotime($pr->pr_created)))
+                        ->first(['exchange_rate'])->exchange_rate;
+        
+                    // Calculate the total price in IDR based on the exchange rate
+                    $totalPriceIDR += $prLine->est_price * $prLine->est_qty * $exchangeRate;
                 } else {
-                    $totalPriceIDR += $prLine->est_price * $prLine->est_qty ;
+                    $totalPriceIDR += $prLine->est_price * $prLine->est_qty;
                 }
             }
             $pr->est_total_price_idr = $totalPriceIDR;
@@ -65,9 +71,14 @@ class PrController extends Controller
 
         foreach ($prLines as $prLine) {
             if ($prLine->est_currency === 'USD') {
-                $totalPriceIDR += $prLine->est_price * $prLine->est_qty * 15000;
+                // Fetch the exchange rate for the corresponding year
+                $exchangeRate = USDExchangeRate::whereYear('year', date('Y', strtotime($pr->pr_created)))
+                    ->first(['exchange_rate'])->exchange_rate;
+    
+                // Calculate the total price in IDR based on the exchange rate
+                $totalPriceIDR += $prLine->est_price * $prLine->est_qty * $exchangeRate;
             } else {
-                $totalPriceIDR += $prLine->est_price * $prLine->est_qty ;
+                $totalPriceIDR += $prLine->est_price * $prLine->est_qty;
             }
         }
 
