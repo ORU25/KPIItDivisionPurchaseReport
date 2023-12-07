@@ -15,7 +15,7 @@ Cara Menjalankan:
 
 3. Masuk ke direcory /Frontend KPI, lalu ubah file .env sesuai dengan url hasil dari menjalankan aplikasi laravel 
 4. Buka vite.config.js lalu ubah host: dengan address computer anda jika mau dibuka di device lain. Jika tidak, host: bisa dihapus atau di comment
-5. Jalankan npm run dev
+5. Jalankan npm install lalu npm run dev
  
 untuk login gunakan
 
