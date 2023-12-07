@@ -69,7 +69,7 @@ const FlexibleDashboard = () => {
           borderWidth: 2,
         },
         {
-          label: "Success",
+          label: "Successful",
           data: years.map((year) => {
             const yearData = data.poYearSuccess.find(
               (item) => item.year === year
@@ -81,7 +81,7 @@ const FlexibleDashboard = () => {
           borderWidth: 2,
         },
         {
-          label: "Cancel",
+          label: "Canceled",
           data: years.map((year) => {
             const yearData = data.poYearCancel.find(
               (item) => item.year === year
@@ -117,7 +117,7 @@ const FlexibleDashboard = () => {
           borderWidth: 2,
         },
         {
-          label: "Success",
+          label: "Successful",
           data: years.map((year) => {
             const yearData = data.prLineYearSuccess.find(
               (item) => item.year === year
@@ -129,7 +129,7 @@ const FlexibleDashboard = () => {
           borderWidth: 2,
         },
         {
-          label: "Cancel",
+          label: "Canceled",
           data: years.map((year) => {
             const yearData = data.prLineYearCancel.find(
               (item) => item.year === year
@@ -290,7 +290,7 @@ const FlexibleDashboard = () => {
               color={"bg-success"}
               mainData={data.prSuccess}
               divider={data.totalPr}
-              title={"PR Success"}
+              title={"PR Successful"}
               icon={"fas fa-check-circle"}
               classes={"col-lg-3 col-6"}
             />
@@ -298,7 +298,7 @@ const FlexibleDashboard = () => {
               color={"bg-danger"}
               mainData={data.prCancel}
               divider={data.totalPr}
-              title={"PR Cancel"}
+              title={"PR Canceled"}
               icon={"fas fa-times-circle"}
               classes={"col-lg-3 col-6"}
             />
@@ -323,7 +323,7 @@ const FlexibleDashboard = () => {
               color={"bg-success"}
               mainData={data.poSuccess}
               divider={data.totalPo}
-              title={"PO Success"}
+              title={"PO Successful"}
               icon={"far fa-check-circle"}
               classes={"col-lg-3 col-6"}
             />
@@ -331,7 +331,7 @@ const FlexibleDashboard = () => {
               color={"bg-danger"}
               mainData={data.poCancel}
               divider={data.totalPo}
-              title={"PO Cancel"}
+              title={"PO Canceled"}
               icon={"far fa-times-circle"}
               classes={"col-lg-3 col-6"}
             />

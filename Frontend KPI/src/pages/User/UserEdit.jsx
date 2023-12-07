@@ -39,8 +39,10 @@ const UserEdit = () => {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
-    formData.append("password", password);
-    formData.append("password_confirmation", passwordConfirmation);
+    if (!password == "") {
+      formData.append("password", password);
+      formData.append("password_confirmation", passwordConfirmation);
+    }
     formData.append("role", role);
 
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -153,18 +155,21 @@ const UserEdit = () => {
                       )}
                     </div>
                   </div>
+
                   <div className="row">
                     <div className="col-md-6">
                       <div className="form-group ">
-                        <label htmlFor="exampleInputPassword1">Password</label>
+                        <label htmlFor="exampleInputPassword1">New Password</label>
                         <input
                           type="password"
                           value={password}
-                          required
                           className="form-control"
                           placeholder="Password"
                           onChange={(e) => setPassword(e.target.value)}
                         />
+                        <h6 className="text-danger ml-1 mt-1">
+                          leave blank to keep current password
+                        </h6>
                       </div>
                       {validation.password && (
                         <div className="alert alert-danger alert-dismissible fade show">
@@ -188,7 +193,6 @@ const UserEdit = () => {
                         </label>
                         <input
                           type="password"
-                          required
                           value={passwordConfirmation}
                           className="form-control"
                           placeholder="Password"
@@ -240,7 +244,7 @@ const UserEdit = () => {
                 <div className="card-footer">
                   <button type="submit" className="btn btn-success">
                     <i className="fas fa-plus mr-2"></i>
-                   Change
+                    Change
                   </button>
                 </div>
               </form>

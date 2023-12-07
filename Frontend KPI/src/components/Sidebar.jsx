@@ -80,7 +80,7 @@ const Sidebar = ({ role }) => {
                       }`}
                     >
                       <i className="nav-icon fas fa-receipt" />
-                      <p>Purchase Requisition</p>
+                      <p>Purchase Requisitions</p>
                     </a>
                   </Link>
                 </li>
@@ -95,7 +95,7 @@ const Sidebar = ({ role }) => {
                       }`}
                     >
                       <i className="nav-icon fas fa-file-invoice" />
-                      <p>Purchase Order</p>
+                      <p>Purchase Orders</p>
                     </a>
                   </Link>
                 </li>

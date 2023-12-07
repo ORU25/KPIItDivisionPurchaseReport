@@ -63,7 +63,7 @@ const PrYearChart = ({
           borderWidth: 2,
         },
         {
-          label: "Success",
+          label: "Successful",
           data: month.map((month) => {
             const yearData = data.prLineYearSuccess.find(
               (item) => item.month === month
@@ -75,7 +75,7 @@ const PrYearChart = ({
           borderWidth: 2,
         },
         {
-          label: "Cancel",
+          label: "Canceled",
           data: month.map((month) => {
             const yearData = data.prLineYearCancel.find(
               (item) => item.month === month

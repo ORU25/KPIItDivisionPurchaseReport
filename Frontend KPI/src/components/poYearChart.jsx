@@ -61,7 +61,7 @@ const PoYearChart = ({
           borderWidth: 2,
         },
         {
-          label: "Success",
+          label: "Successful",
           data: month.map((month) => {
             const yearData = data.poYearSuccess.find(
               (item) => item.month === month
@@ -73,7 +73,7 @@ const PoYearChart = ({
           borderWidth: 2,
         },
         {
-          label: "Cancel",
+          label: "Canceled",
           data: month.map((month) => {
             const yearData = data.poYearCancel.find(
               (item) => item.month === month

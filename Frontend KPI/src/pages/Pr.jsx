@@ -53,10 +53,22 @@ const Pr = () => {
         item.buyer.toLowerCase().match(search.toLocaleLowerCase()) ||
         item.pr_type.toLowerCase().match(search.toLocaleLowerCase()) ||
         item.requested_by.toLowerCase().match(search.toLocaleLowerCase()) ||
-        numberFormatter(item.est_total_price_idr).toString().toLowerCase().match(search.toLocaleLowerCase()) ||
-        formatDate(item.pr_created).toString().toLowerCase().match(search.toLocaleLowerCase()) ||
-        formatDate(item.pr_approve_date).toString().toLowerCase().match(search.toLocaleLowerCase()) ||
-        formatDate(item.pr_cancel).toString().toLowerCase().match(search.toLocaleLowerCase()) ||
+        numberFormatter(item.est_total_price_idr)
+          .toString()
+          .toLowerCase()
+          .match(search.toLocaleLowerCase()) ||
+        formatDate(item.pr_created)
+          .toString()
+          .toLowerCase()
+          .match(search.toLocaleLowerCase()) ||
+        formatDate(item.pr_approve_date)
+          .toString()
+          .toLowerCase()
+          .match(search.toLocaleLowerCase()) ||
+        formatDate(item.pr_cancel)
+          .toString()
+          .toLowerCase()
+          .match(search.toLocaleLowerCase()) ||
         item.pr_no.toString().toLowerCase().includes(search.toLowerCase())
       );
     });
@@ -71,18 +83,19 @@ const Pr = () => {
     const doc = new jsPDF({ orientation: "landscape" });
 
     // Specify the columns to exclude from the PDF table
-    const excludedColumns = ["id", "departement", "created_at", "updated_at"];
+    const excludedColumns = ["id", "created_at", "updated_at"];
 
     const columnMapping = {
       pr_no: "No",
       pr_type: "Type",
+      departement: "Department",
       pr_desc: "Description",
       buyer: "Buyer",
       requested_by: "Requested by",
       pr_created: "Created",
       pr_approve_date: "Approved",
       pr_cancel: "Canceled",
-      est_total_price_idr: "Est Price IDR"
+      est_total_price_idr: "Est Price IDR",
     };
 
     // Filter out the excluded columns
@@ -187,74 +200,74 @@ const Pr = () => {
     },
   ];
   return (
-      <section className="content">
-        <div className="container-fluid overflow-auto">
-          <DataTable
-            columns={column}
-            data={filter}
-            pagination
-            selectableRows
-            selectableRowsHighlight
-            onSelectedRowsChange={handleSelectedRowsChange}
-            progressPending={pending}
-            highlightOnHover
-            progressComponent={
-              <Loading color={"secondary"} classes={"h5 my-5"} />
-            }
-            subHeader
-            subHeaderComponent={
-              <div className="row justify-content-between w-100">
-                <div className="col-auto">
-                  {!pending ? (
-                    <>
-                      <CSVLink
-                        data={selectedRows} // data yang ingin diekspor
-                        headers={column.map((col) => ({
-                          label: col.name,
-                          key: col.selector || col.name,
-                        }))}
-                        filename={"purchase_requisition.csv"}
-                        className={`btn btn-success btn-sm float-right mr-3 ${
-                          selectedRows.length === 0 ? "disabled" : ""
-                        }`}
-                      >
-                        <i className="fas fa-file-csv mr-2"></i>
-                        Export to CSV
-                      </CSVLink>
-                      <button
-                        className={`btn btn-danger btn-sm float-right mr-2 ${
-                          selectedRows.length === 0 ? "disabled" : ""
-                        }`}
-                        onClick={exportToPDF}
-                      >
-                        <i className="fas fa-file-pdf mr-2"></i>
-                        Export to PDF
-                      </button>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div className="col-md-4 mt-2 mt-md-0">
-                  <input
-                    type="text"
-                    className=" form-control"
-                    placeholder="Search..."
-                    value={search}
-                    onChange={(e) => SetSearch(e.target.value)}
-                  />
-                </div>
+    <section className="content">
+      <div className="container-fluid overflow-auto">
+        <DataTable
+          columns={column}
+          data={filter}
+          pagination
+          selectableRows
+          selectableRowsHighlight
+          onSelectedRowsChange={handleSelectedRowsChange}
+          progressPending={pending}
+          highlightOnHover
+          progressComponent={
+            <Loading color={"secondary"} classes={"h5 my-5"} />
+          }
+          subHeader
+          subHeaderComponent={
+            <div className="row justify-content-between w-100">
+              <div className="col-auto">
+                {!pending ? (
+                  <>
+                    <CSVLink
+                      data={selectedRows} // data yang ingin diekspor
+                      headers={column.map((col) => ({
+                        label: col.name,
+                        key: col.selector || col.name,
+                      }))}
+                      filename={"purchase_requisition.csv"}
+                      className={`btn btn-success btn-sm float-right mr-3 ${
+                        selectedRows.length === 0 ? "disabled" : ""
+                      }`}
+                    >
+                      <i className="fas fa-file-csv mr-2"></i>
+                      Export to CSV
+                    </CSVLink>
+                    <button
+                      className={`btn btn-danger btn-sm float-right mr-2 ${
+                        selectedRows.length === 0 ? "disabled" : ""
+                      }`}
+                      onClick={exportToPDF}
+                    >
+                      <i className="fas fa-file-pdf mr-2"></i>
+                      Export to PDF
+                    </button>
+                  </>
+                ) : (
+                  ""
+                )}
               </div>
-            }
-            subHeaderAlign="left"
-            pointerOnHover
-            onRowClicked={(row) => {
-              // Navigasi ke rute berdasarkan ID PR
-              Navigate(`/pr/${row.pr_no}`);
-            }}
-          />
-        </div>
-      </section>
+              <div className="col-md-4 mt-2 mt-md-0">
+                <input
+                  type="text"
+                  className=" form-control"
+                  placeholder="Search..."
+                  value={search}
+                  onChange={(e) => SetSearch(e.target.value)}
+                />
+              </div>
+            </div>
+          }
+          subHeaderAlign="left"
+          pointerOnHover
+          onRowClicked={(row) => {
+            // Navigasi ke rute berdasarkan ID PR
+            Navigate(`/pr/${row.pr_no}`);
+          }}
+        />
+      </div>
+    </section>
   );
 };
 

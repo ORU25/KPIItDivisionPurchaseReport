@@ -69,18 +69,7 @@ const App = () => {
             </Layout>
           }
         />
-        {/* <Route
-          path="/flexibleDashboard"
-          element={
-            <Layout
-              title={"Dashboard IT Division Purchase Report"}
-              {...layoutProps}
-              handleLogout={handleLogout}
-            >
-              <DashboardPrototype />
-            </Layout>
-          }
-        /> */}
+
         <Route
           path="/dashboard/:department"
           element={
@@ -97,7 +86,7 @@ const App = () => {
           path="/pr"
           element={
             <Layout
-              title={"Purchaser Requisition"}
+              title={"Purchase Requisitions"}
               {...layoutProps}
               handleLogout={handleLogout}
             >
@@ -109,7 +98,7 @@ const App = () => {
           path="/po"
           element={
             <Layout
-              title={"Purchase Order"}
+              title={"Purchase Orders"}
               {...layoutProps}
               handleLogout={handleLogout}
             >
@@ -213,8 +202,6 @@ const App = () => {
             </Layout>
           }
         />
-
-       
       </Routes>
     </div>
   );
