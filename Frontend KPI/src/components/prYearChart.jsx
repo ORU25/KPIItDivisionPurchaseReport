@@ -16,6 +16,7 @@ const PrYearChart = ({
   axis,
   barColor,
   style,
+  department,
 }) => {
   const [prYear, setPrYear] = useState([]);
   const [year, setYear] = useState(null);
@@ -27,7 +28,11 @@ const PrYearChart = ({
     if (year) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       await axios
-        .get(`${import.meta.env.VITE_BACKEND_API}/api/dashboard/prYear/${year}`)
+        .get(
+          `${
+            import.meta.env.VITE_BACKEND_API
+          }/api/flexibleDashboard/${department}/prYear/${year}`
+        )
         .then((response) => {
           setData(response.data);
         })
@@ -42,14 +47,16 @@ const PrYearChart = ({
 
   const prYearHandler = () => {
     if (data.prLineYear) {
-      const month = data.prLineYear.map((data)=> data.month)
+      const month = data.prLineYear.map((data) => data.month);
 
       const datasets = [
         {
           label: "Created",
           data: month.map((month) => {
-            const monthData = data.prLineYear.find((item) => item.month == month);
-            return monthData ? monthData.pr_month_count : 0
+            const monthData = data.prLineYear.find(
+              (item) => item.month == month
+            );
+            return monthData ? monthData.pr_month_count : 0;
           }),
           backgroundColor: "rgba(75, 192, 192, 0.7)",
           borderColor: "rgba(75, 192, 192, 1)",
@@ -58,7 +65,9 @@ const PrYearChart = ({
         {
           label: "Success",
           data: month.map((month) => {
-            const yearData = data.prLineYearSuccess.find((item) => item.month === month);
+            const yearData = data.prLineYearSuccess.find(
+              (item) => item.month === month
+            );
             return yearData ? yearData.pr_month_count : 0;
           }),
           backgroundColor: "rgba(40, 167, 69, 0.7)",
@@ -68,18 +77,20 @@ const PrYearChart = ({
         {
           label: "Cancel",
           data: month.map((month) => {
-            const yearData = data.prLineYearCancel.find((item) => item.month === month);
+            const yearData = data.prLineYearCancel.find(
+              (item) => item.month === month
+            );
             return yearData ? yearData.pr_month_count : 0;
           }),
           backgroundColor: "rgba(220, 53, 69, 0.7)",
           borderColor: "rgba(220, 53, 69, 1)",
           borderWidth: 2,
         },
-      ]
+      ];
 
       setPrYear({
         labels: month,
-        datasets: datasets
+        datasets: datasets,
       });
     }
   };

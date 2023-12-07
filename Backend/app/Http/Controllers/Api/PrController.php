@@ -91,6 +91,7 @@ class PrController extends Controller
             'pr_desc' => $pr->pr_desc,
             'buyer' => $pr->buyer,
             'requested_by' => $pr->requested_by,
+            'departement' => $pr->departement,
             'est_total_price_idr' => $formattedTotalPriceIDR,
             'pr_created' => $pr->pr_created,
             'pr_approve_date' => $pr->pr_approve_date,

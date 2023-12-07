@@ -1,25 +1,17 @@
 /* eslint-disable react/prop-types */
 
+import { useParams } from "react-router-dom";
 
-const Navbar = ({ title, name, handleLogout}) => {
-
-  // const [user, setUser] = useState("");
-
-  // const getUser = async () => {
-  //   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  //   await axios
-  //     .get(`${import.meta.env.VITE_BACKEND_API}/api/user`)
-  //     .then((response) => {
-  //       setUser(response.data);
-  //     });
-  // };
-
+const Navbar = ({ title, name, handleLogout }) => {
   const logoutHandler = async () => {
     await handleLogout();
   };
-  // useEffect(() => {
-  //   getUser();
-  // }, []);
+
+  const { department } = useParams();
+
+  // Menyesuaikan judul berdasarkan parameter department
+  const adjustedTitle = `Dashboard ${department}`;
+
   return (
     <nav className="main-header navbar navbar-expand navbar-white navbar-light">
       {/* Left navbar links */}
@@ -28,7 +20,7 @@ const Navbar = ({ title, name, handleLogout}) => {
           <a className="nav-link" data-widget="pushmenu" href="#" role="button">
             <i className="fas fa-bars" />
           </a>
-          <h4 className="m-0 font-weight-bold text-secondary ">{title}</h4>
+          <h5 className="m-0 font-weight-bold text-secondary text-uppercase ">{department ? adjustedTitle : title}</h5>
         </li>
       </ul>
       {/* Right navbar links */}

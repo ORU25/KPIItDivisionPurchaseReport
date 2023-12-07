@@ -1,6 +1,5 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
 import Pr from "./pages/Pr";
 import Po from "./pages/Po";
 import { useEffect, useState } from "react";
@@ -12,6 +11,8 @@ import Users from "./pages/User/Users";
 import UserCreate from "./pages/User/UserCreate";
 import NotFound from "./components/NotFound";
 import UserEdit from "./pages/User/UserEdit";
+import Dashboard from "./pages/Dashboard";
+import FlexibleDashboard from "./pages/FlexibleDashboard";
 const App = () => {
   const token = sessionStorage.getItem("token");
   const Navigate = useNavigate();
@@ -60,11 +61,35 @@ const App = () => {
           path="/dashboard"
           element={
             <Layout
-              title={"Dashboard IT Division Purchase Report"}
+              title={"DASHBOARD PT KALTIM PARNA INDUSTRI"}
               {...layoutProps}
               handleLogout={handleLogout}
             >
               <Dashboard />
+            </Layout>
+          }
+        />
+        {/* <Route
+          path="/flexibleDashboard"
+          element={
+            <Layout
+              title={"Dashboard IT Division Purchase Report"}
+              {...layoutProps}
+              handleLogout={handleLogout}
+            >
+              <DashboardPrototype />
+            </Layout>
+          }
+        /> */}
+        <Route
+          path="/dashboard/:department"
+          element={
+            <Layout
+              title={"Dashboard "}
+              {...layoutProps}
+              handleLogout={handleLogout}
+            >
+              <FlexibleDashboard />
             </Layout>
           }
         />
@@ -164,6 +189,18 @@ const App = () => {
         ) : (
           ""
         )}
+        <Route
+          path="/404"
+          element={
+            <Layout
+              title={"Page Not Found"}
+              {...layoutProps}
+              handleLogout={handleLogout}
+            >
+              <NotFound />
+            </Layout>
+          }
+        />
         <Route
           path="*"
           element={

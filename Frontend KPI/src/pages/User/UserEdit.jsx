@@ -68,7 +68,9 @@ const UserEdit = () => {
       <div className="container-fluid overflow-auto">
         <div className="card card-secondary">
           <div className="card-header">
-            <h3 className="card-title">Edit <b>{email}</b></h3>
+            <h3 className="card-title">
+              Edit <b>{email}</b>
+            </h3>
           </div>
           {/* /.card-header */}
           {/* form start */}
@@ -90,7 +92,7 @@ const UserEdit = () => {
             <>
               <form
                 onSubmit={() => {
-                  UpdateHandler(id);
+                  UpdateHandler();
                 }}
               >
                 <div className="card-body">
@@ -197,46 +199,48 @@ const UserEdit = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-4">
-                    <div className="form-group ">
-                      <label>Role</label>
-                      <select
-                        className="form-control"
-                        required
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                      >
-                        <option value="">Select Role</option>
-                        <option value={"admin"}>Admin</option>
-                        <option value={"user"}>User</option>
-                      </select>
-                    </div>
-                    {validation.message && (
-                      <div className="alert alert-danger alert-dismissible fade show">
-                        {validation.message}
-                        <button
-                          type="button"
-                          className="close hover-alert"
-                          data-dismiss="alert"
-                          aria-label="Close"
+                  <div className="row">
+                    <div className="col-4">
+                      <div className="form-group ">
+                        <label>Role</label>
+                        <select
+                          className="form-control"
+                          required
+                          value={role}
+                          onChange={(e) => setRole(e.target.value)}
                         >
-                          <i
-                            onClick={() => {
-                              setValidation([]);
-                            }}
-                          >
-                            <span aria-hidden="true">×</span>
-                          </i>
-                        </button>
+                          <option value="">Select Role</option>
+                          <option value={"admin"}>Admin</option>
+                          <option value={"user"}>User</option>
+                        </select>
                       </div>
-                    )}
+                      {validation.message && (
+                        <div className="alert alert-danger alert-dismissible fade show">
+                          {validation.message}
+                          <button
+                            type="button"
+                            className="close hover-alert"
+                            data-dismiss="alert"
+                            aria-label="Close"
+                          >
+                            <i
+                              onClick={() => {
+                                setValidation([]);
+                              }}
+                            >
+                              <span aria-hidden="true">×</span>
+                            </i>
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
                 {/* /.card-body */}
                 <div className="card-footer">
                   <button type="submit" className="btn btn-success">
                     <i className="fas fa-plus mr-2"></i>
-                    Add
+                   Change
                   </button>
                 </div>
               </form>

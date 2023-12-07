@@ -42,7 +42,6 @@ class LoginController extends Controller
         //if auth success
         return response()->json([
             'success' => true,
-            'user'    => auth()->user(),    
             'token'   => $token   
         ], 200);
     }

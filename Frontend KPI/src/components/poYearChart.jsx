@@ -16,6 +16,7 @@ const PoYearChart = ({
   axis,
   barColor,
   style,
+  department,
 }) => {
   const [poYear, setPoYear] = useState([]);
   const [year, setYear] = useState(null);
@@ -27,7 +28,11 @@ const PoYearChart = ({
     if (year) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       await axios
-        .get(`${import.meta.env.VITE_BACKEND_API}/api/dashboard/poYear/${year}`)
+        .get(
+          `${
+            import.meta.env.VITE_BACKEND_API
+          }/api/flexibleDashboard/${department}/poYear/${year}`
+        )
         .then((response) => {
           setData(response.data);
         })
@@ -42,14 +47,14 @@ const PoYearChart = ({
 
   const poYearHandler = () => {
     if (data.poYear) {
-      const month = data.poYear.map((data)=> data.month)
+      const month = data.poYear.map((data) => data.month);
 
       const datasets = [
         {
           label: "Created",
           data: month.map((month) => {
             const monthData = data.poYear.find((item) => item.month == month);
-            return monthData ? monthData.po_month_count : 0
+            return monthData ? monthData.po_month_count : 0;
           }),
           backgroundColor: "rgba(75, 192, 192, 0.7)",
           borderColor: "rgba(75, 192, 192, 1)",
@@ -58,7 +63,9 @@ const PoYearChart = ({
         {
           label: "Success",
           data: month.map((month) => {
-            const yearData = data.poYearSuccess.find((item) => item.month === month);
+            const yearData = data.poYearSuccess.find(
+              (item) => item.month === month
+            );
             return yearData ? yearData.po_month_count : 0;
           }),
           backgroundColor: "rgba(40, 167, 69, 0.7)",
@@ -68,17 +75,19 @@ const PoYearChart = ({
         {
           label: "Cancel",
           data: month.map((month) => {
-            const yearData = data.poYearCancel.find((item) => item.month === month);
+            const yearData = data.poYearCancel.find(
+              (item) => item.month === month
+            );
             return yearData ? yearData.po_month_count : 0;
           }),
           backgroundColor: "rgba(220, 53, 69, 0.7)",
           borderColor: "rgba(220, 53, 69, 1)",
           borderWidth: 2,
         },
-      ]
+      ];
       setPoYear({
         labels: month,
-        datasets: datasets
+        datasets: datasets,
       });
     }
   };

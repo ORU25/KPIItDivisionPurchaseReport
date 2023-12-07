@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const UserCreate = () => {
@@ -12,6 +12,7 @@ const UserCreate = () => {
   const [validation, setValidation] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const token = sessionStorage.getItem("token");
 
   const registerHandler = async (e) => {
     e.preventDefault();
@@ -35,6 +36,13 @@ const UserCreate = () => {
       });
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+    }
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <section className="content">
@@ -118,10 +126,8 @@ const UserCreate = () => {
                         </div>
                       )}
                     </div>
-                    
                   </div>
                   <div className="row">
-                    
                     <div className="col-md-6">
                       <div className="form-group ">
                         <label htmlFor="exampleInputPassword1">Password</label>
@@ -170,18 +176,20 @@ const UserCreate = () => {
                     </div>
                   </div>
 
-                  <div className="form-group col-4">
-                    <label>Role</label>
-                    <select
-                      className="form-control"
-                      required
-                      value={role}
-                      onChange={(e) => setRole(e.target.value)}
-                    >
-                      <option value="">Select Role</option>
-                      <option value={"admin"}>Admin</option>
-                      <option value={"user"}>User</option>
-                    </select>
+                  <div className="row">
+                    <div className="form-group col-4">
+                      <label>Role</label>
+                      <select
+                        className="form-control"
+                        required
+                        value={role}
+                        onChange={(e) => setRole(e.target.value)}
+                      >
+                        <option value="">Select Role</option>
+                        <option value={"admin"}>Admin</option>
+                        <option value={"user"}>User</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
                 {/* /.card-body */}

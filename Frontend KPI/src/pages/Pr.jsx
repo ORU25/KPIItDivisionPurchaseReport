@@ -128,6 +128,12 @@ const Pr = () => {
     },
 
     {
+      name: "Department",
+      selector: "departement",
+      sortable: true,
+      width: "200px",
+    },
+    {
       name: "Type",
       selector: "pr_type",
       sortable: true,

@@ -102,7 +102,7 @@ const Sidebar = ({ role }) => {
                 {role != "admin" ? (
                   ""
                 ) : (
-                  <li className="nav-item mt-3">
+                  <li className="nav-item">
                     <Link to={"/users"}>
                       <a
                         className={`nav-link ${
