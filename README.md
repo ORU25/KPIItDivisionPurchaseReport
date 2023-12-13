@@ -12,8 +12,8 @@ Cara Menjalankan:
     - composer install
     - cp .env.example .env
       (
-      ubah konfigurasi databasenya sesuai dengan database yang telah dibuat,
-      tambahkan API key di bagian untuk exhchange rate yang dapat di bikin di
+         ubah konfigurasi databasenya sesuai dengan database yang telah dibuat,
+         tambahkan API key di bagian untuk exhchange rate yang dapat di bikin di
 
           https://apilayer.com/marketplace/exchangerates_data-api
 
