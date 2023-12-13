@@ -2,7 +2,7 @@
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../assets/kpi_logo.png";
 
-const Sidebar = ({ role }) => {
+const Sidebar = ({ role, department }) => {
   const location = useLocation();
   const currentPath = location.pathname;
   return (
@@ -55,67 +55,90 @@ const Sidebar = ({ role }) => {
               >
                 {/* Add icons to the links using the .nav-icon class
             with font-awesome or any other icon font library */}
-                <li className="nav-item ">
-                  <Link to={"/dashboard"}>
-                    <a
-                      className={`nav-link ${
-                        currentPath === "/dashboard"
-                          ? "active text-success text-bold"
-                          : "text-white"
-                      }`}
-                    >
-                      <i className="nav-icon fas fa-th" />
-                      <p>Dashboard</p>
-                    </a>
-                  </Link>
-                </li>
 
-                <li className="nav-item">
-                  <Link to={"/pr"}>
-                    <a
-                      className={`nav-link ${
-                        currentPath === "/pr"
-                          ? "active text-success text-bold"
-                          : "text-white"
-                      }`}
-                    >
-                      <i className="nav-icon fas fa-receipt" />
-                      <p>Purchase Requisitions</p>
-                    </a>
-                  </Link>
-                </li>
+                {department ? (
+                  <>
+                    <li className="nav-item ">
+                      <Link to={`/dashboard/${department}`}>
+                        <a
+                          className={`nav-link ${
+                            currentPath.startsWith("/dashboard")
+                              ? "active text-success text-bold"
+                              : "text-white"
+                          }`}
+                        >
+                          <i className="nav-icon fas fa-th" />
+                          <p>Dashboard</p>
+                        </a>
+                      </Link>
+                    </li>
 
-                <li className="nav-item">
-                  <Link to={"/po"}>
-                    <a
-                      className={`nav-link ${
-                        currentPath === "/po"
-                          ? "active text-success text-bold"
-                          : "text-white"
-                      }`}
-                    >
-                      <i className="nav-icon fas fa-file-invoice" />
-                      <p>Purchase Orders</p>
-                    </a>
-                  </Link>
-                </li>
+                    <li className="nav-item">
+                      <Link to={"/pr"}>
+                        <a
+                          className={`nav-link ${
+                            currentPath === "/pr"
+                              ? "active text-success text-bold"
+                              : "text-white"
+                          }`}
+                        >
+                          <i className="nav-icon fas fa-receipt" />
+                          <p>Purchase Requisitions</p>
+                        </a>
+                      </Link>
+                    </li>
+
+                    <li className="nav-item">
+                      <Link to={"/po"}>
+                        <a
+                          className={`nav-link ${
+                            currentPath === "/po"
+                              ? "active text-success text-bold"
+                              : "text-white"
+                          }`}
+                        >
+                          <i className="nav-icon fas fa-file-invoice" />
+                          <p>Purchase Orders</p>
+                        </a>
+                      </Link>
+                    </li>
+                  </>
+                ) : (
+                  "Loading..."
+                )}
                 {role != "admin" ? (
                   ""
                 ) : (
-                  <li className="nav-item">
-                    <Link to={"/users"}>
-                      <a
-                        className={`nav-link ${
-                          currentPath === "/users"
-                            ? "active text-success text-bold"
-                            : "text-white"
-                        }`}
-                      >
-                        <i className="nav-icon fas fa-users text-sm" />
-                        <p>Users</p>
-                      </a>
-                    </Link>
-                  </li>
+                  <>
+                    <li className="nav-item">
+                      <Link to={"/departments"}>
+                        <a
+                          className={`nav-link ${
+                            currentPath === "/departments"
+                              ? "active text-success text-bold"
+                              : "text-white"
+                          }`}
+                        >
+                          <i className="nav-icon fas fa-building text-sm" />
+                          <p>Departments</p>
+                        </a>
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link to={"/users"}>
+                        <a
+                          className={`nav-link ${
+                            currentPath === "/users"
+                              ? "active text-success text-bold"
+                              : "text-white"
+                          }`}
+                        >
+                          <i className="nav-icon fas fa-users text-sm" />
+                          <p>Users</p>
+                        </a>
+                      </Link>
+                    </li>
+                  </>
                 )}
               </ul>
             </nav>

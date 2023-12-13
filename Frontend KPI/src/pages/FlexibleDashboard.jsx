@@ -4,10 +4,11 @@ import axios from "axios";
 import Card from "../components/Card";
 import PieChart from "../components/PieChart";
 import BarChart from "../components/BarChart";
-import LineChart from "../components/LineChart";
 import DoughnutChart from "../components/DoughnutChart";
 import PrYearChart from "../components/PrYearChart";
 import PoYearChart from "../components/PoYearChart";
+import TotalPricePoChart from "../components/TotalPricePoChart";
+import TotalEstPricePrChart from "../components/TotalEstPricePrChart";
 
 const FlexibleDashboard = () => {
   const Navigate = useNavigate();
@@ -34,11 +35,7 @@ const FlexibleDashboard = () => {
   const fetchData = async () => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     await axios
-      .get(
-        `${
-          import.meta.env.VITE_BACKEND_API
-        }/api/flexibleDashboard/${department}`
-      )
+      .get(`${import.meta.env.VITE_BACKEND_API}/api/dashboard/${department}`)
       .then((response) => {
         if (response.data.totalPr == 0) {
           Navigate("/404");
@@ -369,18 +366,32 @@ const FlexibleDashboard = () => {
               cardColor={"warning"}
             />
 
-            <LineChart
+            {/* <LineChart
               chartData={prYearEstPrice}
               title={"TOTAL ESTIMATE PR PRICE PER YEAR (IDR)"}
               classCustom={"col-md-6 "}
               cardColor={"warning"}
+            /> */}
+            <TotalEstPricePrChart
+              chartData={prYearEstPrice}
+              title={"TOTAL ESTIMATE PR PRICE PER YEAR (IDR)"}
+              classCustom={"col-md-6 "}
+              cardColor={"warning"}
+              department={department}
             />
 
-            <LineChart
+            {/* <LineChart
               chartData={poYearPrice}
               title={"TOTAL PO PRICE PER YEAR (IDR)"}
               classCustom={"col-md-6 "}
               cardColor={"warning"}
+            /> */}
+            <TotalPricePoChart
+              chartData={poYearPrice}
+              title={"TOTAL PO PRICE PER YEAR (IDR)"}
+              classCustom={"col-md-6 "}
+              cardColor={"warning"}
+              department={department}
             />
           </div>
 
@@ -524,18 +535,6 @@ const FlexibleDashboard = () => {
                   </table>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div className="d-flex justify-content-end mb-3">
-            <div className="float-right">
-              <button
-                onClick={() => Navigate(-1)}
-                className="btn btn-info btn-block btn-sm"
-              >
-                <i className="fas fa-caret-left mr-2"></i>
-                <span className="">Go back</span>
-              </button>
             </div>
           </div>
         </div>

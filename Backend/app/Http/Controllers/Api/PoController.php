@@ -3,99 +3,167 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\PO;
-use App\Models\USDExchangeRate;
+use App\Models\Purchase;
 use Illuminate\Http\Request;
+use AshAllenDesign\LaravelExchangeRates\Classes\ExchangeRate;
+use Carbon\Carbon;
 
 class PoController extends Controller
 {
     public function index(){
-        $po = PO::all();
-
-        $po->each(function ($po){
-            $poLines = $po->po_line()->get();
-
-            $totalPriceIDR = 0;
-
-            foreach ($poLines as $poLine) {
-                if ($poLine->total_price_currency === 'USD') {
-                    // Fetch the exchange rate for the corresponding year
-                    $exchangeRate = USDExchangeRate::whereYear('year', date('Y', strtotime($po->po_created)))
-                        ->first(['exchange_rate'])->exchange_rate;
+        $po = Purchase::where('po_no', '!=', null)
+        ->select(
+            'po_no',
+            'po_desc',
+            'po_created',
+            'po_last_changed',
+            'po_approve',
+            'po_confirmation',
+            'po_received',
+            'po_closed',
+            'po_cancel',
+            'vendor',
+            'vendor_type',
+            'total_price',
+            'total_price_currency',
+        )->get();
         
-                    // Calculate the total price in IDR based on the exchange rate
-                    $totalPriceIDR += $poLine->total_price * $exchangeRate;
+        $po->each(function($po){
+            $totalPriceIDR = 0;
+                if($po->total_price_currency === 'USD'){
+                    $exchangeRates = app(ExchangeRate::class);
+                    $totalPriceIDR += $po->total_price * $exchangeRates->exchangeRate( 'USD', 'IDR', Carbon::create($po->po_created));
                 } else {
-                    $totalPriceIDR += $poLine->total_price;
+                    $totalPriceIDR += $po->total_price ;
                 }
-            }
-            $po->total_price_idr = $totalPriceIDR;
-
+                $po->total_price_idr = $totalPriceIDR;
         });
+        $data = $po->groupBy('po_no')->map(function ($groupedItems) {
+            return [
+                'po_no' => $groupedItems[0]->po_no,
+                'po_desc' => $groupedItems[0]->po_desc,
+                'po_created' => $groupedItems[0]->po_created,
+                'po_last_changed' => $groupedItems[0]->po_last_changed == null ? "0000-00-00": $groupedItems[0]->po_last_changed,
+                'po_approve' => $groupedItems[0]->po_approve == null ? "0000-00-00": $groupedItems[0]->po_approve,
+                'po_confirmation' => $groupedItems[0]->po_confirmation == null ? "0000-00-00": $groupedItems[0]->po_confirmation,
+                'po_received' => $groupedItems[0]->po_received == null ? "0000-00-00": $groupedItems[0]->po_received,
+                'po_closed' => $groupedItems[0]->po_closed == null ? "0000-00-00": $groupedItems[0]->po_closed,
+                'po_cancel' => $groupedItems[0]->po_cancel == null ? "0000-00-00": $groupedItems[0]->po_cancel,
+                'vendor' => $groupedItems[0]->vendor,
+                'vendor_type' => $groupedItems[0]->vendor_type,
+                'total_price_idr' => round($groupedItems->sum('total_price_idr')),
+            ];
+        })->values()->toArray();    
 
-        return response()->json($po);
+        return response()->json($data);
     }
 
     public function po_line($po_no){
-        $po = PO::where('po_no', $po_no)->first();
+        $po = Purchase::where('po_no', $po_no)
+        ->select(
+            'po_no',
+            'po_desc',
+            'po_created',
+            'po_last_changed',
+            'po_approve',
+            'po_confirmation',
+            'po_received',
+            'po_closed',
+            'po_cancel',
+            'vendor',
+            'vendor_type',
+        )->distinct('po_no')->first();
 
         if (!$po) {
-            return response()->json(['message' => 'PO tidak ditemukan'], 404);
-        }
-    
-        $poLines = $po->po_line;
+            return response()->json(['error' => 'PO not found'], 404);
+        }  
 
-        $totalPriceIDR = 0;
+        $prs = Purchase::where('po_no', $po_no)->where('pr_no', '!=', null)
+        ->select(
+            'pr_no',
+            'pr_created',
+            'pr_approve_date',
+            'pr_cancel',
+        )
+        ->distinct('pr_no') 
+        ->get();
+        
+        $pr_data = [];
 
-        foreach ($poLines as $poLine) {
-            if ($poLine->total_price_currency === 'USD') {
-                // Fetch the exchange rate for the corresponding year
-                $exchangeRate = USDExchangeRate::whereYear('year', date('Y', strtotime($po->po_created)))
-                    ->first(['exchange_rate'])->exchange_rate;
-    
-                // Calculate the total price in IDR based on the exchange rate
-                $totalPriceIDR += $poLine->total_price * $exchangeRate;
-            } else {
-                $totalPriceIDR += $poLine->total_price;
+        foreach ($prs as $pr) {
+            // Mengecek apakah pr_no sudah ada dalam $pr_data
+            $prExists = false;
+            foreach ($pr_data as $existingPr) {
+                if ($existingPr['pr_no'] === $pr->pr_no) {
+                    $prExists = true;
+                    break;
+                }
+            }
+        
+            // Jika pr_no belum ada, tambahkan ke dalam $pr_data
+            if (!$prExists) {
+                $pr_data[] = [
+                    'pr_no' => $pr->pr_no,
+                    'pr_created' => $pr->pr_created,
+                    'pr_approve_date' => $pr->pr_approve_date,
+                ];
             }
         }
         
 
-        $formattedTotalPriceIDR = number_format($totalPriceIDR, 0, ',', '.');
-    
-        $data = [
-            'id' => $po->id,
-            'po_no' => $po->po_no,
-            'po_desc' => $po->po_desc,
-            'po_created'=> $po->po_created,
-            'po_last_changed'=> $po->po_last_changed,
-            'po_approve'=> $po->po_approve,
-            'po_confirmation'=> $po->po_confirmation,
-            'po_received'=> $po->po_received,
-            'po_closed'=> $po->po_closed,
-            'po_cancel'=> $po->po_cancel,
-            'vendor' => $po->vendor,
-            'vendor_type' => $po->vendor_type,
-            'total_price_idr' =>  $formattedTotalPriceIDR,
-            'pr' => $po->pr->map(function($pr){
-                $firstPrLine = $pr->pr_line()->first();
-                $pr->pr_created = $firstPrLine ? $firstPrLine->pr_created : null;
-                $pr->pr_approve_date = $firstPrLine ? $firstPrLine->pr_approve_date : null;
-                $pr->pr_cancel = $pr->po()->count() > 0 ? '0000-00-00' : ($firstPrLine ? $firstPrLine->pr_cancel : null);
-                // Hapus relasi prLines untuk menghindari penampilan data yang tidak diinginkan
-                unset($pr->prLines);
+        $po_lines = Purchase::where('po_no', $po_no)
+        ->select(
+            'po_line',
+            'po_line_desc',
+            'qty_order',
+            'unit_price_currency',
+            'unit_price_po',
+            'total_price_currency',
+            'total_price',
+            'po_closed_line',
+            'po_cancel_line',
+            'po_cancel_comments',
+            'eta_gmt8',
+            'po_created'
+        )->get();
 
-                return [
-                    'pr_no' => $pr->pr_no,
-                    'pr_created' => $pr->pr_created,
-                    'pr_approve_date' => $pr->pr_approve_date,
-                    'pr_cancel' => $pr->pr_cancel,
-                ];
-            }),
-            'po_lines' => $poLines->map(function ($line) {
-            return $line;
-        })];
-    
-        return response()->json($data);
+
+        $totalPriceIDR = 0;
+
+        foreach ($po_lines as $po_line) {
+            if ($po_line->total_price_currency === 'USD') {
+                // Fetch the exchange rate for the corresponding year
+               
+                    $exchangeRates = app(ExchangeRate::class);
+                    // Calculate the total price in IDR based on the exchange rate
+                    $totalPriceIDR += $po_line->total_price  * $exchangeRates->exchangeRate('USD', 'IDR', Carbon::create($po_line->po_created));
+            } else {
+                $totalPriceIDR += $po_line->total_price ;
+            }
+        }
+
+        $formattedTotalPriceIDR = number_format($totalPriceIDR, 0, ',', '.');
+
+        foreach ($po_lines as $po_line) {
+            $po_lines_data[] = [
+                'po_line' => $po_line->po_line,
+                'po_line_desc' => $po_line->po_line_desc,
+                'qty_order' => $po_line->qty_order,
+                'unit_price_currency' => $po_line->unit_price_currency,
+                'unit_price_po' => $po_line->unit_price_po,
+                'total_price_currency' => $po_line->total_price_currency,
+                'total_price' => $po_line->total_price,
+                'po_closed_line' => $po_line->po_closed_line,
+                'po_cancel_line' => $po_line->po_cancel_line,
+                'po_cancel_comments' => $po_line->po_cancel_comments,
+                'eta_gmt8' => $po_line->eta_gmt8,
+            ];
+        }
+        
+        $po->total_price_idr = $formattedTotalPriceIDR;
+        $po->pr = $pr_data;
+        $po->po_lines = $po_lines_data;
+
+        return response()->json($po);
     }
 }

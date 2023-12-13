@@ -31,7 +31,7 @@ const PrYearChart = ({
         .get(
           `${
             import.meta.env.VITE_BACKEND_API
-          }/api/flexibleDashboard/${department}/prYear/${year}`
+          }/api/dashboard/${department}/prYear/${year}`
         )
         .then((response) => {
           setData(response.data);

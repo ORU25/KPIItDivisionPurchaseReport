@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
@@ -42,6 +43,7 @@ class LoginController extends Controller
         //if auth success
         return response()->json([
             'success' => true,
+            'department' => Auth::user()->department->name,
             'token'   => $token   
         ], 200);
     }

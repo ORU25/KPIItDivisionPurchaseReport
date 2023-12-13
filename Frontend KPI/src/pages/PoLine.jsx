@@ -209,7 +209,7 @@ const PoLine = () => {
                                         )}
                                       </td>
                                       <td>{line.po_closed_line}</td>
-                                      {line.po_cancel_line === "0000-00-00" ? (
+                                      {line.po_cancel_line === null ? (
                                         <td>-</td>
                                       ) : (
                                         <td>{line.po_cancel_line}</td>
@@ -219,7 +219,7 @@ const PoLine = () => {
                                       ) : (
                                         <td>{line.po_cancel_comments}</td>
                                       )}
-                                      {line.eta_gmt8 === "0000-00-00" ? (
+                                      {line.eta_gmt8 === null ? (
                                         <td>-</td>
                                       ) : (
                                         <td>{line.eta_gmt8}</td>

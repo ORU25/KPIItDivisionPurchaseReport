@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Logo from "../assets/kpi_logo.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -23,9 +23,9 @@ const Login = () => {
     await axios
       .post(`${import.meta.env.VITE_BACKEND_API}/api/login`, formData)
       .then((response) => {
-        if (response.data.token) {
+        if (response.data.token && response.data.department) {
           sessionStorage.setItem("token", response.data.token);
-          navigate("/dashboard");
+          navigate(`/dashboard/${response.data.department}`);
         }
       })
       .catch((error) => {
@@ -34,11 +34,11 @@ const Login = () => {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    if (sessionStorage.getItem("token")) {
-      navigate("/dashboard");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (sessionStorage.getItem("token")) {
+  //     navigate("/dashboard");
+  //   }
+  // }, []);
 
   return (
     <div id="login" className="hold-transition login-page">

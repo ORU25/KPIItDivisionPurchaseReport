@@ -1,24 +1,20 @@
 /* eslint-disable react/prop-types */
-import { Bar } from "react-chartjs-2";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Line } from "react-chartjs-2";
+import { useNavigate } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { Chart as ChartJS } from "chart.js/auto";
-import { useEffect, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
-// eslint-disable-next-line react/prop-types
-const PoYearChart = ({
+const TotalEstPricePrChart = ({
   chartData,
   title,
   classCustom,
   cardColor,
-  axis,
-  barColor,
   style,
   department,
 }) => {
-  const [poYear, setPoYear] = useState([]);
+  const [prYearEstPrice, setPrYearEstPrice] = useState([]);
   const [year, setYear] = useState(null);
   const [data, setData] = useState([]);
   const token = sessionStorage.getItem("token");
@@ -31,7 +27,7 @@ const PoYearChart = ({
         .get(
           `${
             import.meta.env.VITE_BACKEND_API
-          }/api/dashboard/${department}/poYear/${year}`
+          }/api/dashboard/${department}/prYearPrice/${year}`
         )
         .then((response) => {
           setData(response.data);
@@ -45,49 +41,19 @@ const PoYearChart = ({
     }
   };
 
-  const poYearHandler = () => {
-    if (data.poYear) {
-      const month = data.poYear.map((data) => data.month);
-
-      const datasets = [
-        {
-          label: "Created",
-          data: month.map((month) => {
-            const monthData = data.poYear.find((item) => item.month == month);
-            return monthData ? monthData.po_month_count : 0;
-          }),
-          backgroundColor: "rgba(75, 192, 192, 0.7)",
-          borderColor: "rgba(75, 192, 192, 1)",
-          borderWidth: 2,
-        },
-        {
-          label: "Successful",
-          data: month.map((month) => {
-            const yearData = data.poYearSuccess.find(
-              (item) => item.month === month
-            );
-            return yearData ? yearData.po_month_count : 0;
-          }),
-          backgroundColor: "rgba(40, 167, 69, 0.7)",
-          borderColor: "rgba(40, 167, 69, 1)",
-          borderWidth: 2,
-        },
-        {
-          label: "Canceled",
-          data: month.map((month) => {
-            const yearData = data.poYearCancel.find(
-              (item) => item.month === month
-            );
-            return yearData ? yearData.po_month_count : 0;
-          }),
-          backgroundColor: "rgba(220, 53, 69, 0.7)",
-          borderColor: "rgba(220, 53, 69, 1)",
-          borderWidth: 2,
-        },
-      ];
-      setPoYear({
-        labels: month,
-        datasets: datasets,
+  const prEstPriceHandler = () => {
+    if (data) {
+      setPrYearEstPrice({
+        labels: data.map((data) => data.month),
+        datasets: [
+          {
+            label: "IDR",
+            data: data.map((data) => data.total_est_price),
+            backgroundColor: "rgba(29, 128, 14, 0.7)",
+            borderColor: "rgba(29, 128, 14, 1)",
+            borderWidth: 2,
+          },
+        ],
       });
     }
   };
@@ -97,7 +63,7 @@ const PoYearChart = ({
   }, [year]);
 
   useEffect(() => {
-    poYearHandler();
+    prEstPriceHandler();
   }, [data]);
 
   const handleSelectChange = (event) => {
@@ -127,12 +93,6 @@ const PoYearChart = ({
       </div>
     );
   }
-
-  const horizontalBarChartOptions = {
-    indexAxis: axis,
-    responsive: true,
-    backgroundColor: barColor,
-  };
 
   return (
     <div className={classCustom}>
@@ -166,11 +126,7 @@ const PoYearChart = ({
             className="row d-flex justify-content-center align-items-center"
             style={style}
           >
-            {year ? (
-              <Bar data={poYear} options={horizontalBarChartOptions} />
-            ) : (
-              <Bar data={chartData} options={horizontalBarChartOptions} />
-            )}
+            {year ? <Line data={prYearEstPrice} /> : <Line data={chartData} />}
           </div>
         </div>
       </div>
@@ -178,4 +134,4 @@ const PoYearChart = ({
   );
 };
 
-export default PoYearChart;
+export default TotalEstPricePrChart;

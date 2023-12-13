@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import Loading from "../../components/Loading";
 
-const Users = () => {
+const Departments = () => {
   const token = sessionStorage.getItem("token");
   const Navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -226,4 +226,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Departments;

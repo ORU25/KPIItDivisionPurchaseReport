@@ -47,23 +47,33 @@ const Pr = () => {
   }, [token, Navigate]);
 
   useEffect(() => {
-    const result = dataPo.filter((item) => {
-      return (
-        item.po_desc.toLowerCase().match(search.toLocaleLowerCase()) ||
-        item.vendor.toLowerCase().match(search.toLocaleLowerCase()) ||
-        item.vendor_type.toLowerCase().match(search.toLocaleLowerCase()) ||
-        numberFormatter(item.total_price_idr).toLowerCase().match(search.toLocaleLowerCase()) ||
-        formatDate(item.po_created).toLowerCase().match(search.toLocaleLowerCase()) ||
-        formatDate(item.po_approve).toLowerCase().match(search.toLocaleLowerCase()) ||
-        formatDate(item.po_confirmation).toLowerCase().match(search.toLocaleLowerCase()) ||
-        formatDate(item.po_received).toLowerCase().match(search.toLocaleLowerCase()) ||
-        formatDate(item.po_cancel).toLowerCase().match(search.toLocaleLowerCase()) ||
-        item.vendor_type.toLowerCase().match(search.toLocaleLowerCase()) ||
-        item.po_no.toString().toLowerCase().includes(search.toLowerCase())
-      );
-    });
-    setFilter(result);
-  }, [search]);
+  const result = dataPo.filter((item) => {
+    const poDescMatch = item.po_desc ? item.po_desc.toLowerCase().includes(search.toLowerCase()) : false;
+    const vendorMatch = item.vendor ? item.vendor.toLowerCase().includes(search.toLowerCase()) : false;
+    const vendorTypeMatch = item.vendor_type ? item.vendor_type.toLowerCase().includes(search.toLowerCase()) : false;
+    const totalPriceMatch = item.total_price_idr ? numberFormatter(item.total_price_idr).toLowerCase().includes(search.toLowerCase()) : false;
+    const poCreatedMatch = item.po_created ? formatDate(item.po_created).toLowerCase().includes(search.toLowerCase()) : false;
+    const poApproveMatch = item.po_approve ? formatDate(item.po_approve).toLowerCase().includes(search.toLowerCase()) : false;
+    const poConfirmationMatch = item.po_confirmation ? formatDate(item.po_confirmation).toLowerCase().includes(search.toLowerCase()) : false;
+    const poReceivedMatch = item.po_received ? formatDate(item.po_received).toLowerCase().includes(search.toLowerCase()) : false;
+    const poCancelMatch = item.po_cancel ? formatDate(item.po_cancel).toLowerCase().includes(search.toLowerCase()) : false;
+    const poNoMatch = item.po_no ? item.po_no.toString().toLowerCase().includes(search.toLowerCase()) : false;
+
+    return (
+      poDescMatch ||
+      vendorMatch ||
+      vendorTypeMatch ||
+      totalPriceMatch ||
+      poCreatedMatch ||
+      poApproveMatch ||
+      poConfirmationMatch ||
+      poReceivedMatch ||
+      poCancelMatch ||
+      poNoMatch
+    );
+  });
+  setFilter(result);
+}, [search, dataPo]);
 
   const handleSelectedRowsChange = (state) => {
     setSelectedRows(state.selectedRows);
@@ -73,7 +83,7 @@ const Pr = () => {
     const doc = new jsPDF({ orientation: "landscape" });
 
     // Specify the columns to exclude from the PDF table
-    const excludedColumns = ["id", "created_at", "updated_at"];
+    // const excludedColumns = ["id", "created_at", "updated_at"];
 
     const columnMapping = {
       po_no: "No",
@@ -92,12 +102,12 @@ const Pr = () => {
 
     // Filter out the excluded columns
     const filteredHeaders = Object.keys(selectedRows[0])
-      .filter((header) => !excludedColumns.includes(header))
+      // .filter((header) => !excludedColumns.includes(header))
       .map((header) => columnMapping[header] || header);
 
     const filteredData = selectedRows.map((row) =>
       Object.keys(row)
-        .filter((key) => !excludedColumns.includes(key))
+        // .filter((key) => !excludedColumns.includes(key))
         .map((key) => row[key])
     );
 
@@ -119,10 +129,12 @@ const Pr = () => {
   const numberFormatter = (value) => {
     return value.toLocaleString();
   };
-  
+
   const formatDate = (dateString) => {
-    const [year, month, day] = dateString.split("-");
-    return `${day}-${month}-${year}`;
+    if (dateString) {
+      const [year, month, day] = dateString.split("-");
+      return `${day}-${month}-${year}`;
+    }
   };
 
   const column = [
@@ -196,74 +208,74 @@ const Pr = () => {
   ];
 
   return (
-      <section className="content">
-        <div className="container-fluid overflow-auto">
-          <DataTable
-            columns={column}
-            data={filter}
-            pagination
-            selectableRows
-            onSelectedRowsChange={handleSelectedRowsChange}
-            selectableRowsHighlight
-            progressPending={pending}
-            highlightOnHover
-            progressComponent={
-              <Loading color={"secondary"} classes={"h5 my-5"} />
-            }
-            subHeader
-            subHeaderComponent={
-              <div className="row justify-content-between w-100">
-                <div className="col-auto">
-                  {!pending ? (
-                    <>
-                      <CSVLink
-                        data={selectedRows} // data yang ingin diekspor
-                        headers={column.map((col) => ({
-                          label: col.name,
-                          key: col.selector || col.name,
-                        }))}
-                        filename={"purchase_requisition.csv"}
-                        className={`btn btn-success btn-sm float-right mr-3 ${
-                          selectedRows.length === 0 ? "disabled" : ""
-                        }`}
-                      >
-                        <i className="fas fa-file-csv mr-2"></i>
-                        Export to CSV
-                      </CSVLink>
-                      <button
-                        className={`btn btn-danger btn-sm float-right mr-2 ${
-                          selectedRows.length === 0 ? "disabled" : ""
-                        }`}
-                        onClick={exportToPDF}
-                      >
-                        <i className="fas fa-file-pdf mr-2"></i>
-                        Export to PDF
-                      </button>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div className="col-md-4 mt-2 mt-md-0">
-                  <input
-                    type="text"
-                    className=" form-control"
-                    placeholder="Search..."
-                    value={search}
-                    onChange={(e) => SetSearch(e.target.value)}
-                  />
-                </div>
+    <section className="content">
+      <div className="container-fluid overflow-auto">
+        <DataTable
+          columns={column}
+          data={filter}
+          pagination
+          selectableRows
+          onSelectedRowsChange={handleSelectedRowsChange}
+          selectableRowsHighlight
+          progressPending={pending}
+          highlightOnHover
+          progressComponent={
+            <Loading color={"secondary"} classes={"h5 my-5"} />
+          }
+          subHeader
+          subHeaderComponent={
+            <div className="row justify-content-between w-100">
+              <div className="col-auto">
+                {!pending ? (
+                  <>
+                    <CSVLink
+                      data={selectedRows} // data yang ingin diekspor
+                      headers={column.map((col) => ({
+                        label: col.name,
+                        key: col.selector || col.name,
+                      }))}
+                      filename={"purchase_requisition.csv"}
+                      className={`btn btn-success btn-sm float-right mr-3 ${
+                        selectedRows.length === 0 ? "disabled" : ""
+                      }`}
+                    >
+                      <i className="fas fa-file-csv mr-2"></i>
+                      Export to CSV
+                    </CSVLink>
+                    <button
+                      className={`btn btn-danger btn-sm float-right mr-2 ${
+                        selectedRows.length === 0 ? "disabled" : ""
+                      }`}
+                      onClick={exportToPDF}
+                    >
+                      <i className="fas fa-file-pdf mr-2"></i>
+                      Export to PDF
+                    </button>
+                  </>
+                ) : (
+                  ""
+                )}
               </div>
-            }
-            subHeaderAlign="right"
-            pointerOnHover
-            onRowClicked={(row) => {
-              // Navigasi ke rute berdasarkan ID PR
-              Navigate(`/po/${row.po_no}`);
-            }}
-          />
-        </div>
-      </section>
+              <div className="col-md-4 mt-2 mt-md-0">
+                <input
+                  type="text"
+                  className=" form-control"
+                  placeholder="Search..."
+                  value={search}
+                  onChange={(e) => SetSearch(e.target.value)}
+                />
+              </div>
+            </div>
+          }
+          subHeaderAlign="right"
+          pointerOnHover
+          onRowClicked={(row) => {
+            // Navigasi ke rute berdasarkan ID PR
+            Navigate(`/po/${row.po_no}`);
+          }}
+        />
+      </div>
+    </section>
   );
 };
 

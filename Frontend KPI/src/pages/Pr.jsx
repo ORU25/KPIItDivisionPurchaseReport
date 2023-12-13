@@ -48,32 +48,30 @@ const Pr = () => {
 
   useEffect(() => {
     const result = dataPr.filter((item) => {
+      const prDescMatch = item.pr_desc ? item.pr_desc.toLowerCase().includes(search.toLowerCase()) : false;
+      const buyerMatch = item.buyer ? item.buyer.toLowerCase().includes(search.toLowerCase()) : false;
+      const prTypeMatch = item.pr_type ? item.pr_type.toLowerCase().includes(search.toLowerCase()) : false;
+      const requestedByMatch = item.requested_by ? item.requested_by.toLowerCase().includes(search.toLowerCase()) : false;
+      const estTotalPriceMatch = item.est_total_price_idr ? numberFormatter(item.est_total_price_idr).toString().toLowerCase().includes(search.toLowerCase()) : false;
+      const prCreatedMatch = item.pr_created ? formatDate(item.pr_created).toString().toLowerCase().includes(search.toLowerCase()) : false;
+      const prApproveDateMatch = item.pr_approve_date ? formatDate(item.pr_approve_date).toString().toLowerCase().includes(search.toLowerCase()) : false;
+      const prCancelMatch = item.pr_cancel ? formatDate(item.pr_cancel).toString().toLowerCase().includes(search.toLowerCase()) : false;
+      const prNoMatch = item.pr_no ? item.pr_no.toString().toLowerCase().includes(search.toLowerCase()) : false;
+  
       return (
-        item.pr_desc.toLowerCase().match(search.toLocaleLowerCase()) ||
-        item.buyer.toLowerCase().match(search.toLocaleLowerCase()) ||
-        item.pr_type.toLowerCase().match(search.toLocaleLowerCase()) ||
-        item.requested_by.toLowerCase().match(search.toLocaleLowerCase()) ||
-        numberFormatter(item.est_total_price_idr)
-          .toString()
-          .toLowerCase()
-          .match(search.toLocaleLowerCase()) ||
-        formatDate(item.pr_created)
-          .toString()
-          .toLowerCase()
-          .match(search.toLocaleLowerCase()) ||
-        formatDate(item.pr_approve_date)
-          .toString()
-          .toLowerCase()
-          .match(search.toLocaleLowerCase()) ||
-        formatDate(item.pr_cancel)
-          .toString()
-          .toLowerCase()
-          .match(search.toLocaleLowerCase()) ||
-        item.pr_no.toString().toLowerCase().includes(search.toLowerCase())
+        prDescMatch ||
+        buyerMatch ||
+        prTypeMatch ||
+        requestedByMatch ||
+        estTotalPriceMatch ||
+        prCreatedMatch ||
+        prApproveDateMatch ||
+        prCancelMatch ||
+        prNoMatch
       );
     });
     setFilter(result);
-  }, [search]);
+  }, [search, dataPr]);
 
   const handleSelectedRowsChange = (state) => {
     setSelectedRows(state.selectedRows);
@@ -83,7 +81,7 @@ const Pr = () => {
     const doc = new jsPDF({ orientation: "landscape" });
 
     // Specify the columns to exclude from the PDF table
-    const excludedColumns = ["id", "created_at", "updated_at"];
+    // const excludedColumns = ["id", "created_at", "updated_at"];
 
     const columnMapping = {
       pr_no: "No",
@@ -100,12 +98,12 @@ const Pr = () => {
 
     // Filter out the excluded columns
     const filteredHeaders = Object.keys(selectedRows[0])
-      .filter((header) => !excludedColumns.includes(header))
+      // .filter((header) => !excludedColumns.includes(header))
       .map((header) => columnMapping[header] || header);
 
     const filteredData = selectedRows.map((row) =>
       Object.keys(row)
-        .filter((key) => !excludedColumns.includes(key))
+        // .filter((key) => !excludedColumns.includes(key))
         .map((key) => row[key])
     );
 
@@ -125,8 +123,10 @@ const Pr = () => {
   };
 
   const formatDate = (dateString) => {
-    const [year, month, day] = dateString.split("-");
-    return `${day}-${month}-${year}`;
+    if (dateString) {
+      const [year, month, day] = dateString.split("-");
+      return `${day}-${month}-${year}`;
+    }
   };
 
   const numberFormatter = (value) => {

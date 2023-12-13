@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('u_s_d_exchange_rates', function (Blueprint $table) {
-            $table->id();
-            $table->year("year");
-            $table->integer("exchange_rate");
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->unsignedBigInteger('department_id');
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
+            $table->enum('role',['admin','user']);
         });
     }
 
@@ -24,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('u_s_d_exchange_rates');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

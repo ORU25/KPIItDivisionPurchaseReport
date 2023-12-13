@@ -99,7 +99,7 @@ const PrLine = () => {
                           text={"Created"}
                           data={data.pr_created}
                         />
-                        {data.pr_approve_date === "0000-00-00" ? (
+                        {data.pr_approve_date === null ? (
                           ""
                         ) : (
                           <TimeLineItem
@@ -109,7 +109,7 @@ const PrLine = () => {
                             data={data.pr_approve_date}
                           />
                         )}
-                        {data.pr_cancel === "0000-00-00" ? (
+                        {data.pr_cancel === null ? (
                           ""
                         ) : (
                           <TimeLineItem
@@ -172,7 +172,7 @@ const PrLine = () => {
                                     <td>{line.pr_created}</td>
                                     <td>{line.pr_approve_date}</td>
                                     <td>{line.pr_last_changed}</td>
-                                    {line.pr_cancel === "0000-00-00" ? (
+                                    {line.pr_cancel === null ? (
                                       <td>-</td>
                                     ) : (
                                       <td>{line.pr_cancel}</td>
@@ -217,7 +217,7 @@ const PrLine = () => {
                                   text={"Created"}
                                   data={po.po_created}
                                 />
-                                {po.po_approve === "0000-00-00" ? (
+                                {po.po_approve === null ? (
                                   ""
                                 ) : (
                                   <TimeLineItem
@@ -227,7 +227,7 @@ const PrLine = () => {
                                     data={po.po_approve}
                                   />
                                 )}
-                                {po.po_confirmation === "0000-00-00" ? (
+                                {po.po_confirmation === null ? (
                                   ""
                                 ) : (
                                   <TimeLineItem
@@ -237,7 +237,7 @@ const PrLine = () => {
                                     data={po.po_confirmation}
                                   />
                                 )}
-                                {po.po_received === "0000-00-00" ? (
+                                {po.po_received === null ? (
                                   ""
                                 ) : (
                                   <TimeLineItem
@@ -247,7 +247,7 @@ const PrLine = () => {
                                     data={po.po_received}
                                   />
                                 )}
-                                {po.po_closed === "0000-00-00" ? (
+                                {po.po_closed === null ? (
                                   ""
                                 ) : (
                                   <TimeLineItem
@@ -257,7 +257,7 @@ const PrLine = () => {
                                     data={po.po_closed}
                                   />
                                 )}
-                                {po.po_last_changed === "0000-00-00" ? (
+                                {po.po_last_changed === null ? (
                                   ""
                                 ) : (
                                   <TimeLineItem
@@ -267,7 +267,7 @@ const PrLine = () => {
                                     data={po.po_last_changed}
                                   />
                                 )}
-                                {po.po_cancel === "0000-00-00" ? (
+                                {po.po_cancel === null ? (
                                   ""
                                 ) : (
                                   <TimeLineItem

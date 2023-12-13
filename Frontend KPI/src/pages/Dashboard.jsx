@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 import { useEffect } from "react";
 import { Link, useNavigate} from "react-router-dom";
 
-const Dashboard = () => {
+const Dashboard = ({department}) => {
 
   const token = sessionStorage.getItem('token')
   const navigate = useNavigate()
@@ -11,15 +12,22 @@ const Dashboard = () => {
       navigate("/");
     }
     window.scrollTo(0, 0);
-  }, []);
+  }, [token]);
+
+  useEffect(()=>{
+    if(department){
+      navigate(`/dashboard/${department}`)
+    }
+  }, [department])
 
   return (
     <>
       <section className="content">
         <div className="container-fluid">
           <div className="h2 mb-3 mt-4 font-weight-bold text-center text-olive">
-            DEPARTMENT / DIVISION
+            DEPARTMENT / DIVISION {department}
             <hr className="w-50 border"/>
+            
           </div>
           <div className=" d-flex justify-content-center flex-wrap">
             <Link

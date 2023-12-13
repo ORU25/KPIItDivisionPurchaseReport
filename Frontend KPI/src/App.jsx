@@ -11,14 +11,16 @@ import Users from "./pages/User/Users";
 import UserCreate from "./pages/User/UserCreate";
 import NotFound from "./components/NotFound";
 import UserEdit from "./pages/User/UserEdit";
-import Dashboard from "./pages/Dashboard";
+// import Dashboard from "./pages/Dashboard";
 import FlexibleDashboard from "./pages/FlexibleDashboard";
+import Departments from "./pages/Department/Departments";
 const App = () => {
   const token = sessionStorage.getItem("token");
   const Navigate = useNavigate();
   const [user, setUser] = useState({
     role: null,
     name: null,
+    department: null,
   });
 
   const getUser = async () => {
@@ -38,6 +40,7 @@ const App = () => {
         setUser({
           role: null,
           name: null,
+          department: null,
         });
         Navigate("/");
       });
@@ -51,13 +54,13 @@ const App = () => {
     }
   }, [token]);
 
-  const layoutProps = { role: user.role, name: user.name };
+  const layoutProps = { role: user.role, name: user.name, department: user.department};
 
   return (
     <div className="">
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route
+        {/* <Route
           path="/dashboard"
           element={
             <Layout
@@ -65,10 +68,10 @@ const App = () => {
               {...layoutProps}
               handleLogout={handleLogout}
             >
-              <Dashboard />
+              <Dashboard department={user.department} />
             </Layout>
           }
-        />
+        /> */}
 
         <Route
           path="/dashboard/:department"
@@ -172,6 +175,22 @@ const App = () => {
                 handleLogout={handleLogout}
               >
                 <UserEdit />
+              </Layout>
+            }
+          />
+        ) : (
+          ""
+        )}
+        {user.role == "admin" ? (
+          <Route
+            path="/departments"
+            element={
+              <Layout
+                title={"Departments"}
+                {...layoutProps}
+                handleLogout={handleLogout}
+              >
+                <Departments />
               </Layout>
             }
           />

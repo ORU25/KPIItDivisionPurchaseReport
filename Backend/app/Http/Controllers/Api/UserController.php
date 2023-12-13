@@ -22,6 +22,7 @@ class UserController extends Controller
                 'name'=>$user->name,
                 'email'=>$user->email,
                 'role'=>$user->role,
+                'department' => $user->department->name
             ];
         });
         return response()->json($data,200);
@@ -104,6 +105,7 @@ class UserController extends Controller
                 'name'      => $request->name,
                 'email'     => $request->email,
                 'role'      => $request->role,
+                'department_id' => 1,
                 'password'  => $request->has('password') ? bcrypt($request->password) : $user->password
             ]);
         } catch (\Throwable $th) {

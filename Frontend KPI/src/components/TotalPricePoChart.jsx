@@ -1,24 +1,20 @@
-/* eslint-disable react/prop-types */
-import { Bar } from "react-chartjs-2";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Line } from "react-chartjs-2";
+import { useNavigate } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { Chart as ChartJS } from "chart.js/auto";
-import { useEffect, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
-// eslint-disable-next-line react/prop-types
-const PoYearChart = ({
+/* eslint-disable react/prop-types */
+const TotalPricePoChart = ({
   chartData,
   title,
   classCustom,
   cardColor,
-  axis,
-  barColor,
   style,
   department,
 }) => {
-  const [poYear, setPoYear] = useState([]);
+  const [poYearPrice, setPoYearPrice] = useState([]);
   const [year, setYear] = useState(null);
   const [data, setData] = useState([]);
   const token = sessionStorage.getItem("token");
@@ -31,10 +27,11 @@ const PoYearChart = ({
         .get(
           `${
             import.meta.env.VITE_BACKEND_API
-          }/api/dashboard/${department}/poYear/${year}`
+          }/api/dashboard/${department}/poYearPrice/${year}`
         )
         .then((response) => {
           setData(response.data);
+          
         })
         .catch((error) => {
           if (error.response && error.response.status === 401) {
@@ -45,65 +42,38 @@ const PoYearChart = ({
     }
   };
 
-  const poYearHandler = () => {
-    if (data.poYear) {
-      const month = data.poYear.map((data) => data.month);
 
-      const datasets = [
-        {
-          label: "Created",
-          data: month.map((month) => {
-            const monthData = data.poYear.find((item) => item.month == month);
-            return monthData ? monthData.po_month_count : 0;
-          }),
-          backgroundColor: "rgba(75, 192, 192, 0.7)",
-          borderColor: "rgba(75, 192, 192, 1)",
-          borderWidth: 2,
-        },
-        {
-          label: "Successful",
-          data: month.map((month) => {
-            const yearData = data.poYearSuccess.find(
-              (item) => item.month === month
-            );
-            return yearData ? yearData.po_month_count : 0;
-          }),
-          backgroundColor: "rgba(40, 167, 69, 0.7)",
-          borderColor: "rgba(40, 167, 69, 1)",
-          borderWidth: 2,
-        },
-        {
-          label: "Canceled",
-          data: month.map((month) => {
-            const yearData = data.poYearCancel.find(
-              (item) => item.month === month
-            );
-            return yearData ? yearData.po_month_count : 0;
-          }),
-          backgroundColor: "rgba(220, 53, 69, 0.7)",
-          borderColor: "rgba(220, 53, 69, 1)",
-          borderWidth: 2,
-        },
-      ];
-      setPoYear({
-        labels: month,
-        datasets: datasets,
+  const poPriceHandler = () => {
+    if (data ) {
+      setPoYearPrice({
+        labels: data.map((data) => data.month),
+        datasets: [
+          {
+            label: "IDR",
+            data: data.map((data) => data.total_price_per_year),
+            backgroundColor: "rgba(29, 128, 14, 0.7)",
+            borderColor: "rgba(29, 128, 14, 1)",
+            borderWidth: 2,
+          },
+        ],
       });
     }
   };
+
 
   useEffect(() => {
     fetchYear();
   }, [year]);
 
   useEffect(() => {
-    poYearHandler();
+    poPriceHandler();
   }, [data]);
 
   const handleSelectChange = (event) => {
     const selectedYear = event.target.value;
     setYear(selectedYear === "All" ? null : selectedYear);
   };
+
 
   if (!chartData || !chartData.labels || !chartData.datasets) {
     return (
@@ -128,12 +98,7 @@ const PoYearChart = ({
     );
   }
 
-  const horizontalBarChartOptions = {
-    indexAxis: axis,
-    responsive: true,
-    backgroundColor: barColor,
-  };
-
+ 
   return (
     <div className={classCustom}>
       <div className={`card card-${cardColor} border border-dashed`}>
@@ -167,9 +132,9 @@ const PoYearChart = ({
             style={style}
           >
             {year ? (
-              <Bar data={poYear} options={horizontalBarChartOptions} />
+              <Line data={poYearPrice} />
             ) : (
-              <Bar data={chartData} options={horizontalBarChartOptions} />
+              <Line data={chartData} />
             )}
           </div>
         </div>
@@ -178,4 +143,4 @@ const PoYearChart = ({
   );
 };
 
-export default PoYearChart;
+export default TotalPricePoChart;
