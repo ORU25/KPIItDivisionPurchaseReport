@@ -1,25 +1,21 @@
-/* eslint-disable react/prop-types */
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
+import { useNavigate } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { Chart as ChartJS } from "chart.js/auto";
-import { useEffect, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
-// eslint-disable-next-line react/prop-types
-const PrYearChart = ({
+/* eslint-disable react/prop-types */
+const VendorTypeByYearChart = ({
   chartData,
   title,
   classCustom,
   cardColor,
-  axis,
-  barColor,
   style,
   department,
-  yearList,
+  yearList
 }) => {
-  const [prYear, setPrYear] = useState([]);
+  const [vendorType, setVendorType] = useState([]);
   const [year, setYear] = useState(null);
   const [data, setData] = useState([]);
   const token = sessionStorage.getItem("token");
@@ -32,7 +28,7 @@ const PrYearChart = ({
         .get(
           `${
             import.meta.env.VITE_BACKEND_API
-          }/api/dashboard/${department}/prYear/${year}`
+          }/api/dashboard/${department}/vendorTypeByYear/${year}`
         )
         .then((response) => {
           setData(response.data);
@@ -46,51 +42,45 @@ const PrYearChart = ({
     }
   };
 
-  const prYearHandler = () => {
-    if (data.prLineYear) {
-      const month = data.prLineYear.map((data) => data.month);
-
-      const datasets = [
-        {
-          label: "Created",
-          data: month.map((month) => {
-            const monthData = data.prLineYear.find(
-              (item) => item.month == month
-            );
-            return monthData ? monthData.pr_month_count : 0;
-          }),
-          backgroundColor: "rgba(75, 192, 192, 0.7)",
-          borderColor: "rgba(75, 192, 192, 1)",
-          borderWidth: 2,
-        },
-        {
-          label: "Successful",
-          data: month.map((month) => {
-            const yearData = data.prLineYearSuccess.find(
-              (item) => item.month === month
-            );
-            return yearData ? yearData.pr_month_count : 0;
-          }),
-          backgroundColor: "rgba(40, 167, 69, 0.7)",
-          borderColor: "rgba(40, 167, 69, 1)",
-          borderWidth: 2,
-        },
-        {
-          label: "Canceled",
-          data: month.map((month) => {
-            const yearData = data.prLineYearCancel.find(
-              (item) => item.month === month
-            );
-            return yearData ? yearData.pr_month_count : 0;
-          }),
-          backgroundColor: "rgba(220, 53, 69, 0.7)",
-          borderColor: "rgba(220, 53, 69, 1)",
-          borderWidth: 2,
-        },
+  const vendorTypeHandler = () => {
+    if (data && data.vendorTypePoCount) {
+      const months = data.vendorTypePoCount.months;
+      const datasets = [];
+      const pastelColorPalette = [
+        "#FFD700", // Gold
+        "#FFA07A", // Light Salmon
+        "#FFB6C1", // Light Pink
+        "#87CEEB", // Sky Blue
+        "#00FA9A", // Medium Spring Green
+        "#FFDAB9", // Peach Puff
+        "#B0E0E6", // Powder Blue
+        "#FFE4C4", // Bisque
+        "#98FB98", // Mint Green
+        "#DDA0DD", // Plum
       ];
 
-      setPrYear({
-        labels: month,
+      Object.keys(data.vendorTypePoCount).forEach((vendorType, index) => {
+        if (vendorType === "months") return;
+
+        const dataForVendorType = months.map((month) => {
+          const monthData = data.vendorTypePoCount[vendorType].find(
+            (item) => item.month === month
+          );
+          return monthData ? monthData.count : 0;
+        });
+
+        datasets.push({
+          label: vendorType,
+          data: dataForVendorType,
+          borderWidth: 2,
+          backgroundColor:
+            pastelColorPalette[index % pastelColorPalette.length],
+          borderColor: "rgba(61, 64, 62,0.7)",
+        });
+      });
+
+      setVendorType({
+        labels: months,
         datasets: datasets,
       });
     }
@@ -101,7 +91,7 @@ const PrYearChart = ({
   }, [year]);
 
   useEffect(() => {
-    prYearHandler();
+    vendorTypeHandler();
   }, [data]);
 
   const handleSelectChange = (event) => {
@@ -132,23 +122,11 @@ const PrYearChart = ({
     );
   }
 
-  const horizontalBarChartOptions = {
-    indexAxis: axis,
-    responsive: true,
-    backgroundColor: barColor,
-    scales: {
-      x: {
-        max: 12, // Batasi jumlah label yang ditampilkan pada sumbu x
-      },
-    },
-  };
-
   return (
     <div className={classCustom}>
       <div className={`card card-${cardColor} border border-dashed`}>
         <div className="card-header" style={{ position: "relative" }}>
           <h3 className="card-title">{title}</h3>
-
           <div
             className="card-tools"
             style={{ position: "absolute", top: 8, right: 20 }}
@@ -170,12 +148,7 @@ const PrYearChart = ({
             className="row d-flex justify-content-center align-items-center"
             style={style}
           >
-            {year ? (
-              <Bar data={prYear} options={horizontalBarChartOptions} />
-            ) : (
-              <Bar data={chartData}  options={horizontalBarChartOptions} />
-            )}
-            <div></div>
+            {year ? <Bar data={vendorType} /> : <Bar data={chartData} />}
           </div>
         </div>
       </div>
@@ -183,4 +156,4 @@ const PrYearChart = ({
   );
 };
 
-export default PrYearChart;
+export default VendorTypeByYearChart;

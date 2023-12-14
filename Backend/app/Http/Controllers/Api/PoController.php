@@ -114,6 +114,7 @@ class PoController extends Controller
         $po_lines = Purchase::where('po_no', $po_no)
         ->select(
             'po_line',
+            'pr_no',
             'po_line_desc',
             'qty_order',
             'unit_price_currency',
@@ -147,6 +148,7 @@ class PoController extends Controller
         foreach ($po_lines as $po_line) {
             $po_lines_data[] = [
                 'po_line' => $po_line->po_line,
+                'pr_no' => $po_line->pr_no,
                 'po_line_desc' => $po_line->po_line_desc,
                 'qty_order' => $po_line->qty_order,
                 'unit_price_currency' => $po_line->unit_price_currency,

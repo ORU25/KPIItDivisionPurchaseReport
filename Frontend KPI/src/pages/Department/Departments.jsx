@@ -7,19 +7,19 @@ import Loading from "../../components/Loading";
 const Departments = () => {
   const token = sessionStorage.getItem("token");
   const Navigate = useNavigate();
-  const [users, setUsers] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [pending, setPending] = useState(true);
   const [search, SetSearch] = useState("");
   const [filter, setFilter] = useState([]);
   const [validation, setValidation] = useState([]);
 
-  const getUsers = async () => {
+  const getDepartments = async () => {
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_API}/api/users`
+        `${import.meta.env.VITE_BACKEND_API}/api/departments`
       );
-      setUsers(response.data);
+      setDepartments(response.data);
       setFilter(response.data);
       setPending(false);
     } catch (error) {
@@ -30,119 +30,35 @@ const Departments = () => {
     }
   };
 
-  const deleteUser = async (userId) => {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    await axios
-      .delete(`${import.meta.env.VITE_BACKEND_API}/api/user/${userId}`)
-      .then(() => {
-        getUsers();
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 401) {
-          sessionStorage.removeItem("token");
-          Navigate("/");
-        }
 
-        if (error.response && error.response.status === 403) {
-          setValidation(error.response.data);
-        }
-      });
-  };
 
   const column = [
+   
+    
+    {
+      name: "Action",
+      width: "70px",
+      cell: (row) => (
+        <>
+          <Link to={`/department/edit/${row.id}`}>
+            <button onClick={""} className="btn btn-sm btn-secondary mr-2">
+              <i className="fas fa-pencil-alt"></i>
+            </button>
+          </Link>
+        </>
+      ),
+    },
     {
       name: "Name",
       selector: "name",
       sortable: true,
     },
-    {
-      name: "Email",
-      selector: "email",
-      sortable: true,
-      width: "250px",
-    },
-    {
-      name: "Role",
-      selector: "role",
-      sortable: true,
-    },
-    {
-      name: "Department",
-      selector: "department",
-      sortable: true,
-    },
-    {
-      name: "Actions",
-      cell: (row) => (
-        <>
-          <Link to={`/user/edit/${row.id}`}>
-            <button onClick={""} className="btn btn-sm btn-secondary mr-2">
-              <i className="fas fa-pencil-alt"></i>
-            </button>
-          </Link>
-          <button
-            onClick={""}
-            data-toggle="modal"
-            data-target={`#Modal${row.id}`}
-            className="btn btn-sm btn-danger"
-          >
-            <i className="fas fa-trash "></i>
-          </button>
-          <div
-            className="modal fade"
-            id={`Modal${row.id}`}
-            tabIndex={-1}
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true"
-          >
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title" id="exampleModalLabel">
-                    Delete <b>{row.email}</b>
-                  </h5>
-                  <button
-                    type="button"
-                    className="close"
-                    data-dismiss="modal"
-                    aria-label="Close"
-                  >
-                    <span aria-hidden="true">×</span>
-                  </button>
-                </div>
-                <div className="modal-body">
-                  <h6 className="text-center">
-                  
-                    Are you sure to delete this user ?
-                  </h6>
-                </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    data-dismiss="modal"
-                    className="btn btn-danger btn-sm"
-                    onClick={() => {
-                      deleteUser(row.id);
-                    }}
-                  >
-                    <i className="fas fa-trash mr-2"></i>
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
-      ),
-    },
   ];
 
   useEffect(() => {
-    const result = users.filter((item) => {
+    const result = departments.filter((item) => {
       return (
-        item.name.toLowerCase().match(search.toLocaleLowerCase()) ||
-        item.email.toLowerCase().match(search.toLocaleLowerCase()) ||
-        item.role.toLowerCase().match(search.toLocaleLowerCase())
+        item.name.toLowerCase().match(search.toLocaleLowerCase())
       );
     });
     setFilter(result);
@@ -152,7 +68,7 @@ const Departments = () => {
     if (!token) {
       Navigate("/");
     }
-    getUsers();
+    getDepartments();
     window.scrollTo(0, 0);
   }, [token, Navigate]);
 
@@ -195,12 +111,12 @@ const Departments = () => {
                 <>
                   <div className="col-auto">
                     <>
-                      <Link to={"/user/create"}>
+                      <Link to={"/department/create"}>
                         <button
                           className={`btn btn-success btn-sm float-right `}
                         >
-                          <i className="fas fa-user-plus mr-2"></i>
-                          Add User
+                          <i className="fas fa-plus mr-2"></i>
+                          Add Department
                         </button>
                       </Link>
                     </>

@@ -14,6 +14,8 @@ import UserEdit from "./pages/User/UserEdit";
 // import Dashboard from "./pages/Dashboard";
 import FlexibleDashboard from "./pages/FlexibleDashboard";
 import Departments from "./pages/Department/Departments";
+import DepartmentCreate from "./pages/Department/DepartmentCreate";
+import DepartmentEdit from "./pages/Department/DepartmentEdit";
 const App = () => {
   const token = sessionStorage.getItem("token");
   const Navigate = useNavigate();
@@ -77,7 +79,7 @@ const App = () => {
           path="/dashboard/:department"
           element={
             <Layout
-              title={"Dashboard "}
+              title={`Dashboard `}
               {...layoutProps}
               handleLogout={handleLogout}
             >
@@ -191,6 +193,38 @@ const App = () => {
                 handleLogout={handleLogout}
               >
                 <Departments />
+              </Layout>
+            }
+          />
+        ) : (
+          ""
+        )}
+        {user.role == "admin" ? (
+          <Route
+            path="/department/create"
+            element={
+              <Layout
+                title={"Add Department"}
+                {...layoutProps}
+                handleLogout={handleLogout}
+              >
+                <DepartmentCreate />
+              </Layout>
+            }
+          />
+        ) : (
+          ""
+        )}
+        {user.role == "admin" ? (
+          <Route
+            path="/department/edit/:id"
+            element={
+              <Layout
+                title={"Edit Department"}
+                {...layoutProps}
+                handleLogout={handleLogout}
+              >
+                <DepartmentEdit />
               </Layout>
             }
           />

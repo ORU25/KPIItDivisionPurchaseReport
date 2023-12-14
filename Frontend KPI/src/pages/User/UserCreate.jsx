@@ -8,11 +8,28 @@ const UserCreate = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [role, setRole] = useState("");
+  const [departments, setDepartments] = useState("");
+  const [department, setDepartment] = useState("");
   //define state validation
   const [validation, setValidation] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
+
+  const getDepartment = async () => {
+    setIsLoading(true);
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    await axios
+      .get(`${import.meta.env.VITE_BACKEND_API}/api/departments`)
+      .then((response) => {
+        setDepartments(response.data)
+      })
+      .catch((error) => {
+        //assign error to state "validation"
+        setValidation(error.response.data);
+      });
+    setIsLoading(false);
+  }
 
   const registerHandler = async (e) => {
     e.preventDefault();
@@ -24,7 +41,8 @@ const UserCreate = () => {
     formData.append("password", password);
     formData.append("password_confirmation", passwordConfirmation);
     formData.append("role", role);
-
+    formData.append("department_id", department);
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     await axios
       .post(`${import.meta.env.VITE_BACKEND_API}/api/register`, formData)
       .then(() => {
@@ -41,6 +59,7 @@ const UserCreate = () => {
     if (!token) {
       navigate("/");
     }
+    getDepartment()
     window.scrollTo(0, 0);
   }, []);
 
@@ -176,6 +195,25 @@ const UserCreate = () => {
                     </div>
                   </div>
 
+                  <div className="row">
+                    <div className="form-group col-4">
+                      <label>Department</label>
+                      <select
+                        className="form-control"
+                        required
+                        value={department}
+                        onChange={(e) => setDepartment(e.target.value)}
+                      >
+                        <option value="">Select Department</option>
+                        {departments &&  departments.map((department) => (
+                          <option key={department.id} value={department.id}>
+                            {department.name}
+                          </option>
+                        ))}
+                        
+                      </select>
+                    </div>
+                  </div>
                   <div className="row">
                     <div className="form-group col-4">
                       <label>Role</label>

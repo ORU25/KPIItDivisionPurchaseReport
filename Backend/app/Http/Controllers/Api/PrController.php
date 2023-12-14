@@ -91,6 +91,7 @@ class PrController extends Controller
             "est_qty",
             "est_currency",
             "est_price",
+            "po_no",
         )->get();
 
         $po = Purchase::where('pr_no', $pr_no)->where('po_no', '!=', null)

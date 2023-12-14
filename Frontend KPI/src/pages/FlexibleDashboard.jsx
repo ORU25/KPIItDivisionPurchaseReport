@@ -3,16 +3,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Card from "../components/Card";
 import PieChart from "../components/PieChart";
-import BarChart from "../components/BarChart";
+// import BarChart from "../components/BarChart";
 import DoughnutChart from "../components/DoughnutChart";
-import PrYearChart from "../components/PrYearChart";
-import PoYearChart from "../components/PoYearChart";
+import PrYearChart from "../components/prYearChart";
+import PoYearChart from "../components/poYearChart";
 import TotalPricePoChart from "../components/TotalPricePoChart";
 import TotalEstPricePrChart from "../components/TotalEstPricePrChart";
+import VendorTypeByYearChart from "../components/VendorTypeByYearChart";
 
 const FlexibleDashboard = () => {
   const Navigate = useNavigate();
   const [data, setData] = useState([]);
+  // const [departments, setDepartments] = useState([]);
 
   const [poYear, setPoYear] = useState({});
   const [poYearPrice, setPoYearPrice] = useState({});
@@ -34,12 +36,13 @@ const FlexibleDashboard = () => {
 
   const fetchData = async () => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
     await axios
       .get(`${import.meta.env.VITE_BACKEND_API}/api/dashboard/${department}`)
       .then((response) => {
-        if (response.data.totalPr == 0) {
-          Navigate("/404");
-        }
+        // if (response.data.totalPr == 0) {
+        //   Navigate("/404");
+        // }
         setData(response.data);
       })
       .catch((error) => {
@@ -49,6 +52,21 @@ const FlexibleDashboard = () => {
         }
       });
   };
+
+  // const fetchDepartments = async () => {
+  //   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  //   await axios
+  //   .get(`${import.meta.env.VITE_BACKEND_API}/api/dashboard/departments`)
+  //   .then((response) => {
+  //     setDepartments(response.data);
+  //   })
+  //   .catch((error) => {
+  //     if (error.response && error.response.status === 401) {
+  //       sessionStorage.removeItem("token");
+  //       Navigate("/");
+  //     }
+  //   });
+  // }
 
   const poYearHandler = () => {
     if (data && data.poYear) {
@@ -230,11 +248,23 @@ const FlexibleDashboard = () => {
 
   const vendorTypeHandler = () => {
     if (data && data.vendorTypePoCount) {
+      const pastelColorPalette = [
+        "#FFD700", // Gold
+        "#FFA07A", // Light Salmon
+        "#FFB6C1", // Light Pink
+        "#87CEEB", // Sky Blue
+        "#00FA9A", // Medium Spring Green
+        "#FFDAB9", // Peach Puff
+        "#B0E0E6", // Powder Blue
+        "#FFE4C4", // Bisque
+        "#98FB98", // Mint Green
+        "#DDA0DD", // Plum
+      ];
       const years = data.vendorTypePoCount.years;
       const datasets = [];
 
       // Iterating over each vendor type
-      Object.keys(data.vendorTypePoCount).forEach((vendorType) => {
+      Object.keys(data.vendorTypePoCount).forEach((vendorType, index) => {
         // Skip the key 'years'
         if (vendorType === "years") return;
 
@@ -249,6 +279,9 @@ const FlexibleDashboard = () => {
           label: vendorType,
           data: dataForVendorType,
           borderWidth: 2,
+          backgroundColor:
+            pastelColorPalette[index % pastelColorPalette.length],
+          borderColor: "rgba(61, 64, 62,0.7)",
         });
       });
 
@@ -263,6 +296,7 @@ const FlexibleDashboard = () => {
     if (!token) {
       Navigate("/");
     }
+    // fetchDepartments();
     fetchData();
     window.scrollTo(0, 0);
   }, [token, Navigate]);
@@ -278,10 +312,37 @@ const FlexibleDashboard = () => {
     vendorTypeHandler();
   }, [data]); //
 
+  const handleSelectChange = (event) => {
+    const selected = event.target.value;
+    Navigate(`/dashboard/${selected}`);
+  };
+
   return (
     <>
       <section className="content">
         <div className="container-fluid">
+          <div className="row pl-2 pr-2">
+            <select
+              className="form-control form-control-md text-center col-12 col-md-6 col-lg-4 ml-auto mb-3 text-uppercase font-weight-bold text-secondary"
+              onChange={handleSelectChange}
+              value={department}
+            >
+              {data.departments &&
+                data.departments.map((department, key) => {
+                  return (
+                    <>
+                      <option
+                        key={key}
+                        value={department.departement}
+                        className="text-uppercase"
+                      >
+                        {department.departement}
+                      </option>
+                    </>
+                  );
+                })}
+            </select>
+          </div>
           <div className="row">
             <Card
               color={"bg-success"}
@@ -351,6 +412,7 @@ const FlexibleDashboard = () => {
 
           <div className="row">
             <PrYearChart
+              yearList={data.yearsPr}
               department={department}
               chartData={prLineYear}
               title={"PR LINE PER YEAR"}
@@ -359,6 +421,7 @@ const FlexibleDashboard = () => {
             />
 
             <PoYearChart
+              yearList={data.yearsPo}
               department={department}
               chartData={poYear}
               title={"PO PER YEAR"}
@@ -366,13 +429,8 @@ const FlexibleDashboard = () => {
               cardColor={"warning"}
             />
 
-            {/* <LineChart
-              chartData={prYearEstPrice}
-              title={"TOTAL ESTIMATE PR PRICE PER YEAR (IDR)"}
-              classCustom={"col-md-6 "}
-              cardColor={"warning"}
-            /> */}
             <TotalEstPricePrChart
+              yearList={data.yearsPr}
               chartData={prYearEstPrice}
               title={"TOTAL ESTIMATE PR PRICE PER YEAR (IDR)"}
               classCustom={"col-md-6 "}
@@ -380,13 +438,8 @@ const FlexibleDashboard = () => {
               department={department}
             />
 
-            {/* <LineChart
-              chartData={poYearPrice}
-              title={"TOTAL PO PRICE PER YEAR (IDR)"}
-              classCustom={"col-md-6 "}
-              cardColor={"warning"}
-            /> */}
             <TotalPricePoChart
+              yearList={data.yearsPo}
               chartData={poYearPrice}
               title={"TOTAL PO PRICE PER YEAR (IDR)"}
               classCustom={"col-md-6 "}
@@ -402,13 +455,22 @@ const FlexibleDashboard = () => {
               classCustom={"col-12 col-md-4"}
               cardColor={"olive"}
             />
-            <BarChart
+            <VendorTypeByYearChart
+              yearList={data.yearsPo}
               chartData={vendorType}
               title={"VENDOR TYPE"}
               classCustom={"col-md-8 col-12"}
               cardColor={"olive"}
               style={{ height: "350px" }}
+              department={department}
             />
+            {/* <BarChart
+              chartData={vendorType}
+              title={"VENDOR TYPE"}
+              classCustom={"col-md-8 col-12"}
+              cardColor={"olive"}
+              style={{ height: "350px" }}
+            /> */}
           </div>
 
           <div className="row">

@@ -178,6 +178,7 @@ const PoLine = () => {
                                 <thead>
                                   <tr>
                                     <th>Line</th>
+                                    <th>PR No</th>
                                     <th>Description</th>
                                     <th>Qty Order</th>
                                     <th>Unit Price Currency</th>
@@ -194,6 +195,7 @@ const PoLine = () => {
                                   data.po_lines.map((line) => (
                                     <tr key={line.id}>
                                       <td>{line.po_line}</td>
+                                      <td>{line.pr_no}</td>
                                       <td>{line.po_line_desc}</td>
                                       <td>{line.qty_order}</td>
                                       <td>{line.unit_price_currency}</td>

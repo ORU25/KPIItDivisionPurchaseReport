@@ -8,6 +8,9 @@ const UserEdit = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [role, setRole] = useState("");
+  const [department, setDepartment] = useState("");
+  const [departments, setDepartments] = useState("");
+  const [header, setHeader] = useState("");
   //define state validation
   const [validation, setValidation] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,12 +22,25 @@ const UserEdit = () => {
   const getUser = async () => {
     setIsLoading(true);
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+    await axios
+      .get(`${import.meta.env.VITE_BACKEND_API}/api/departments`)
+      .then((response) => {
+        setDepartments(response.data)
+      })
+      .catch((error) => {
+        //assign error to state "validation"
+        setValidation(error.response.data);
+      });
+
     await axios
       .get(`${import.meta.env.VITE_BACKEND_API}/api/user/${id}`)
       .then((response) => {
         setName(response.data.name);
         setEmail(response.data.email);
         setRole(response.data.role);
+        setDepartment(response.data.department_id);
+        setHeader(response.data.email);
       })
       .catch((error) => {
         //assign error to state "validation"
@@ -43,9 +59,11 @@ const UserEdit = () => {
       formData.append("password", password);
       formData.append("password_confirmation", passwordConfirmation);
     }
+    formData.append("department_id", department);
     formData.append("role", role);
 
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    
     await axios
       .post(`${import.meta.env.VITE_BACKEND_API}/api/user/edit/${id}`, formData)
       .then(() => {
@@ -71,7 +89,7 @@ const UserEdit = () => {
         <div className="card card-secondary">
           <div className="card-header">
             <h3 className="card-title">
-              Edit <b>{email}</b>
+              Edit <b>{header}</b>
             </h3>
           </div>
           {/* /.card-header */}
@@ -201,6 +219,25 @@ const UserEdit = () => {
                           }
                         />
                       </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="form-group col-4">
+                      <label>Department</label>
+                      <select
+                        className="form-control"
+                        required
+                        value={department}
+                        onChange={(e) => setDepartment(e.target.value)}
+                      >
+                        <option value="">Select Department</option>
+                        {departments &&  departments.map((department) => (
+                          <option key={department.id} value={department.id}>
+                            {department.name}
+                          </option>
+                        ))}
+                        
+                      </select>
                     </div>
                   </div>
                   <div className="row">

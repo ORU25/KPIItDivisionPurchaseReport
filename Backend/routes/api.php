@@ -37,11 +37,19 @@ Route::get('/user/{id}', [UserController::class, 'show'])->middleware('auth:api'
 Route::post('/user/edit/{id}', [UserController::class, 'update'])->middleware('auth:api','role:admin');
 Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware('auth:api','role:admin');
 
-Route::get('/dashboard/{department}', [DashboardController::class, 'index'])->middleware('auth:api');
+Route::get('/departments', [DepartmentController::class, 'index'])->middleware('auth:api','role:admin');
+Route::post('/departments', [DepartmentController::class, 'store'])->middleware('auth:api','role:admin');
+Route::get('/department/{id}', [DepartmentController::class, 'edit'])->middleware('auth:api','role:admin');
+Route::post('/department/edit/{id}', [DepartmentController::class, 'update'])->middleware('auth:api','role:admin');
+
+
+// Route::get('/dashboard/departments', [DashboardController::class, 'getDepartment'])->middleware('auth:api');
+Route::get('/dashboard/{department}', [DashboardController::class, 'index']);
 Route::get('/dashboard/{department}/prYear/{year}', [DashboardController::class, 'prYear'])->middleware('auth:api');
 Route::get('/dashboard/{department}/poYear/{year}', [DashboardController::class, 'poYear'])->middleware('auth:api');
-Route::get('/dashboard/{department}/prYearPrice/{year}', [DashboardController::class, 'prYearPrice']);
-Route::get('/dashboard/{department}/poYearPrice/{year}', [DashboardController::class, 'poYearPrice']);
+Route::get('/dashboard/{department}/prYearPrice/{year}', [DashboardController::class, 'prYearPrice'])->middleware('auth:api');
+Route::get('/dashboard/{department}/poYearPrice/{year}', [DashboardController::class, 'poYearPrice'])->middleware('auth:api');
+Route::get('/dashboard/{department}/vendorTypeByYear/{year}', [DashboardController::class, 'vendorTypeByYear'])->middleware('auth:api');
 
 
 

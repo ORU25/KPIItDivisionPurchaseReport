@@ -152,6 +152,7 @@ const PrLine = () => {
                               <thead>
                                 <tr>
                                   <th>Line</th>
+                                  <th>PO No</th>
                                   <th>PCI No</th>
                                   <th>Description</th>
                                   <th>Created</th>
@@ -167,6 +168,7 @@ const PrLine = () => {
                                 data.pr_lines.map((line) => (
                                   <tr key={line.id}>
                                     <td>{line.pr_line}</td>
+                                    <td>{line.po_no}</td>
                                     <td>{line.pci_no}</td>
                                     <td>{line.pr_line_desc}</td>
                                     <td>{line.pr_created}</td>

@@ -22,7 +22,8 @@ class RegisterController extends Controller
             'name'      => 'required',
             'email'     => 'required|email|unique:users',
             'password'  => 'required|min:8|confirmed',
-            'role'      => 'required'
+            'role'      => 'required',
+            'department_id' => 'required'
         ]);
 
         //if validation fails
@@ -35,7 +36,7 @@ class RegisterController extends Controller
             'name'      => $request->name,
             'email'     => $request->email,
             'role'      => $request->role,
-            'department_id' => 1,
+            'department_id' => $request->department_id,
             'password'  => bcrypt($request->password)
         ]);
 

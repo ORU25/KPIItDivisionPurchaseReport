@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Department;
 use App\Models\Purchase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +42,11 @@ class DashboardController extends Controller
         $prLineYear = Purchase::where('departement', $department)
         ->select( DB::raw('YEAR(pr_created) as year'), DB::raw('COUNT(*) as pr_line_year_count'))
         ->groupBy(DB::raw('YEAR(pr_created)'))
+        ->orderBy(DB::raw('YEAR(pr_created)'), 'desc') // Urutkan data berdasarkan kolom yang diinginkan (misalnya 'created_at')
+        ->take(10)
         ->get();
+
+        
 
         $prLineYearSuccess = Purchase::where('departement', $department)->where('pr_cancel', null )
         ->select( DB::raw('YEAR(pr_created) as year'), DB::raw('COUNT(*) as pr_line_year_success_count'))
@@ -61,11 +66,12 @@ class DashboardController extends Controller
         ->groupBy( 'vendor_type','year')
         ->get();
 
-            $uniqueYears = $vendorTypePoCount->pluck('year')->unique()->sort();
+           $uniqueYears = $vendorTypePoCount->sortByDesc('year')->pluck('year')->unique()->take(10);
+        // $uniqueYears = $vendorTypePoCount->pluck('year')->unique()->sort();
                 
             // Organize the data by vendor_type and year
             $result = [
-                'years' => $uniqueYears->values()->toArray(),
+                'years' => $uniqueYears->reverse()->values()->toArray(),
             ];
             
             foreach ($vendorTypePoCount as $vendor) {
@@ -92,6 +98,8 @@ class DashboardController extends Controller
             DB::raw('COUNT(DISTINCT po_no) as po_year_count')
         )
         ->groupBy(DB::raw('YEAR(po_created)'))
+        ->orderBy(DB::raw('YEAR(po_created)'), 'desc') // Urutkan data berdasarkan kolom yang diinginkan (misalnya 'created_at')
+        ->take(10)
         ->get();
         
         
@@ -141,7 +149,8 @@ class DashboardController extends Controller
                     'year' => Carbon::parse($groupedItems[0]->po_created)->format('Y'),
                     'total_price_per_year' => round($groupedItems->sum('total_price_idr')),
                 ];
-            })->values()->toArray();
+            })->sortByDesc('year') 
+            ->take(10)->values();
         
         $prYearEstPrice = Purchase::where('departement', $department)
         ->where('pr_created', '!=', null)
@@ -166,10 +175,26 @@ class DashboardController extends Controller
                     'year' => Carbon::parse($groupedItems[0]->pr_created)->format('Y'),
                     'total_est_price' => round($groupedItems->sum('est_price_idr')),
                 ];
-            })->values()->toArray();
+            })->sortByDesc('year') 
+            ->take(10)->values();
 
+        
+        $yearPo= Purchase::where('departement', $department)
+        ->where('po_created', '!=', null)
+        ->select(DB::raw('YEAR(po_created) as year'))
+        ->distinct('year')
+        ->get();
 
+        $yearPr= Purchase::where('departement', $department)
+        ->where('po_created', '!=', null)
+        ->select(DB::raw('YEAR(po_created) as year'))
+        ->distinct('year')
+        ->get();
 
+        $department = Purchase::select('departement')->distinct()->get();
+
+        // $reversedPrLineYear = $prLineYear->reverse();
+        
         return response()->json([
             'totalPr' => $totalPr,
             'prSuccess' => $prSuccess,
@@ -186,27 +211,31 @@ class DashboardController extends Controller
             'prRequester' => $prRequester,
             'prBuyer' => $prBuyer,
 
-            'prLineYear' => $prLineYear,
+            'prLineYear' => $prLineYear->reverse()->values(),
             'prLineYearSuccess' => $prLineYearSuccess,
             'prLineYearCancel' => $prLineYearCancel,
 
             'vendorTypePoCount' => $result,
 
-            'poYear' => $poYear,
+            'poYear' => $poYear->reverse()->values(),
             'poYearSuccess' => $poYearSuccess,
             'poYearCancel' => $poYearCancel,
 
-            'poYearPrice' => $poYearPricePerYear,
-            'prYearEstPrice' => $prYearEstPricePerYear,
-        ]);
+            'poYearPrice' => $poYearPricePerYear->reverse()->values()->toArray(),
+            'prYearEstPrice' => $prYearEstPricePerYear->reverse()->values()->toArray(),
+
+            'departments' => $department,
+            'yearsPo' =>$yearPo,
+            'yearsPr' =>$yearPr
+        ],200);
     }
 
-    public function prYear($departement, $year){
+    public function prYear($department, $year){
         $allMonths = [
             'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
         ];
         
-        $prLineYear = Purchase::where('departement', $departement)->whereYear('pr_created', $year)
+        $prLineYear = Purchase::where('departement', $department)->whereYear('pr_created', $year)
         ->select(
             DB::raw("DATE_FORMAT(pr_created, '%b') as month"),
             DB::raw('COUNT(*) as pr_month_count'))
@@ -223,7 +252,7 @@ class DashboardController extends Controller
             ];
         });
 
-        $prLineYearSuccess = Purchase::where('departement', $departement)->whereYear('pr_created', $year)->where('pr_cancel', null)
+        $prLineYearSuccess = Purchase::where('departement', $department)->whereYear('pr_created', $year)->where('pr_cancel', null)
         ->select(
             DB::raw("DATE_FORMAT(pr_created, '%b') as month"),
             DB::raw('COUNT(*) as pr_month_count'))
@@ -241,7 +270,7 @@ class DashboardController extends Controller
         });
 
 
-        $prLineYearCancel = Purchase::where('departement', $departement)->whereYear('pr_created', $year)->where('pr_cancel','!=',null)
+        $prLineYearCancel = Purchase::where('departement', $department)->whereYear('pr_created', $year)->where('pr_cancel','!=',null)
         ->select(
             DB::raw("DATE_FORMAT(pr_created, '%b') as month"),
             DB::raw('COUNT(*) as pr_month_count'))
@@ -265,15 +294,15 @@ class DashboardController extends Controller
         ];
         
           
-        return response()->json($data);
+        return response()->json($data,200);
     }
 
-    public function poYear($departement, $year){
+    public function poYear($department, $year){
         $allMonths = [
             'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
         ];
         
-        $poYear = Purchase::where('departement', $departement)
+        $poYear = Purchase::where('departement', $department)
             ->whereYear('po_created', $year)
             ->where('po_no', '!=', null)
             ->select(
@@ -294,7 +323,7 @@ class DashboardController extends Controller
             ];
         });
         
-        $poYearSuccess = Purchase::where('departement', $departement)->whereYear('po_created', $year)
+        $poYearSuccess = Purchase::where('departement', $department)->whereYear('po_created', $year)
         ->where('po_no','!=',null)
         ->where('po_cancel', null)
         ->select(
@@ -314,7 +343,7 @@ class DashboardController extends Controller
         });
         
         
-        $poYearCancel = Purchase::where('departement', $departement)->whereYear('po_created', $year)
+        $poYearCancel = Purchase::where('departement', $department)->whereYear('po_created', $year)
         ->where('po_no','!=',null)
         ->where('po_cancel','!=', null)
         ->select(
@@ -339,21 +368,24 @@ class DashboardController extends Controller
             'poYearCancel' => $resultPoYearCancel,
         ];
 
-        return response()->json($data);
+        
+
+        return response()->json($data,200);
     }
 
 
-    public function poYearPrice($departement, $year){
+    public function poYearPrice($department, $year){
         $allMonths = [
             'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
         ];
-        $po= Purchase::where('departement', $departement)->whereYear('po_created', $year)
+        $po= Purchase::where('departement', $department)->whereYear('po_created', $year)
         ->select(
             'po_created',
             'total_price', 
             'total_price_currency'
         )->get();
 
+        
         $po->each(function($po){
             $totalPriceIDR = 0;
             if($po->total_price_currency === 'USD'){
@@ -384,16 +416,16 @@ class DashboardController extends Controller
             ];
         });
 
-        return response()->json($resultPoYearPrice);
+        return response()->json($resultPoYearPrice,200);
         
     }
 
-    public function prYearPrice($departement, $year){
+    public function prYearPrice($department, $year){
         $allMonths = [
             'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
         ];
 
-        $pr = Purchase::where('departement', $departement)->whereYear('pr_created', $year)
+        $pr = Purchase::where('departement', $department)->whereYear('pr_created', $year)
         ->select(
             'pr_created',
             'est_qty', 
@@ -431,6 +463,94 @@ class DashboardController extends Controller
             ];
         });
 
-        return response()->json($resultPrYearEstPrice);
+        return response()->json($resultPrYearEstPrice,200);
+    }
+
+    // public function getDepartment(){
+    //     $department = Department::all();
+    //     $data = $department->map(function ($data){
+    //         return [
+    //             'name' => $data->name,
+    //         ];
+    //     });
+
+    //     return response()->json($data,200);
+
+    // }
+
+    public function vendorTypeByYear($department, $year){
+        // Array bulan tetap
+        $allMonths = [
+            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        ];
+    
+        // Query untuk mengambil data yang ada
+        $vendorTypePoCount = Purchase::where('departement', $department)
+            ->where('vendor_type', '!=', null)
+            ->whereYear('po_created', $year)
+            ->select(
+                'vendor_type',
+                DB::raw("DATE_FORMAT(po_created,'%b') as month"),
+                DB::raw('COUNT(DISTINCT po_no) as po_count')
+            )
+            ->groupBy('vendor_type', 'month')
+            ->get();
+    
+        // Membuat array kosong untuk hasil akhir
+        $result = [
+            'months' => $allMonths,
+        ];
+    
+        // Inisialisasi array untuk setiap tipe vendor
+        foreach ($vendorTypePoCount as $vendor) {
+            $vendorType = $vendor->vendor_type;
+            $month = $vendor->month;
+            $poCount = $vendor->po_count;
+    
+            // Buat tipe vendor jika belum ada
+            if (!isset($result[$vendorType])) {
+                $result[$vendorType] = [];
+            }
+    
+            // Tambahkan data ke tipe vendor sesuai bulan
+            $result[$vendorType][] = [
+                'month' => $month,
+                'count' => $poCount,
+            ];
+        }
+    
+        // Isi bulan yang tidak memiliki data dengan count 0
+        foreach ($result as $vendorType => $data) {
+            if ($vendorType != 'months') {
+                foreach ($allMonths as $month) {
+                    $found = false;
+                    foreach ($data as $item) {
+                        if ($item['month'] == $month) {
+                            $found = true;
+                            break;
+                        }
+                    }
+    
+                    // Tambahkan data dengan count 0 jika tidak ditemukan
+                    if (!$found) {
+                        $result[$vendorType][] = [
+                            'month' => $month,
+                            'count' => 0,
+                        ];
+                    }
+                }
+    
+                // Urutkan data berdasarkan bulan
+                usort($result[$vendorType], function ($a, $b) use ($allMonths) {
+                    return array_search($a['month'], $allMonths) - array_search($b['month'], $allMonths);
+                });
+            }
+        }
+    
+        $data = [
+            'vendorTypePoCount' => $result
+        ];
+    
+        return response()->json($data, 200);
     }
 }
