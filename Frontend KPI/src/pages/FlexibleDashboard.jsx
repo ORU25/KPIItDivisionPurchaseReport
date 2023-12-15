@@ -29,6 +29,7 @@ const FlexibleDashboard = () => {
 
   const [sortedBuyers, setSortedBuyers] = useState({});
   const [sortedRequesters, setSortedRequesters] = useState({});
+  const [selectDepartment, setSelectDepartment] = useState([]);
 
   const token = sessionStorage.getItem("token");
 
@@ -44,11 +45,16 @@ const FlexibleDashboard = () => {
         //   Navigate("/404");
         // }
         setData(response.data);
+        setSelectDepartment(response.data.departments);
       })
       .catch((error) => {
         if (error.response && error.response.status === 401) {
           sessionStorage.removeItem("token");
           Navigate("/");
+        }
+
+        if (error.response && error.response.status === 404) {
+          Navigate("/404");
         }
       });
   };
@@ -297,6 +303,18 @@ const FlexibleDashboard = () => {
       Navigate("/");
     }
     // fetchDepartments();
+    setData([]);
+    setPoYear([]);
+    setPoYearPrice([]);
+    setPrRequester([]);
+    setPrBuyer([]);
+    setPrType([]);
+    setPrLineYear([]);
+    setPrYearEstPrice([]);
+    setVendorType([]);
+    setSortedBuyers([]);
+    setSortedRequesters([]);
+
     fetchData();
     window.scrollTo(0, 0);
   }, [token, Navigate]);
@@ -327,8 +345,8 @@ const FlexibleDashboard = () => {
               onChange={handleSelectChange}
               value={department}
             >
-              {data.departments &&
-                data.departments.map((department, key) => {
+              {selectDepartment &&
+                selectDepartment.map((department, key) => {
                   return (
                     <>
                       <option

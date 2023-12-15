@@ -194,6 +194,10 @@ class DashboardController extends Controller
         $department = Purchase::select('departement')->distinct()->get();
 
         // $reversedPrLineYear = $prLineYear->reverse();
+
+        if ($totalPr == 0) {
+            return response()->json("Data Not Found",404);
+        }
         
         return response()->json([
             'totalPr' => $totalPr,

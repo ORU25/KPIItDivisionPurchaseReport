@@ -1,17 +1,17 @@
 /* eslint-disable react/prop-types */
-const Card = ({ color, mainData, divider, icon, title , classes}) => {
+const Card = ({ color, mainData, divider, icon, title, classes }) => {
   return (
     <div className={classes}>
       {/* small box */}
       <div className={`small-box ${color}`}>
         <div className="inner">
           <h3>
-            {mainData && divider ? (
+            {mainData !== undefined && divider !== undefined ? (
               <span>
                 {((mainData / divider) * 100).toFixed(2)}
                 <sup style={{ fontSize: "20px" }}>%</sup>
               </span>
-            ) : mainData ? (
+            ) : mainData !== undefined ? (
               mainData
             ) : (
               <div className="spinner-border text-light" role="status">
