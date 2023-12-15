@@ -482,13 +482,7 @@ const FlexibleDashboard = () => {
               style={{ height: "350px" }}
               department={department}
             />
-            {/* <BarChart
-              chartData={vendorType}
-              title={"VENDOR TYPE"}
-              classCustom={"col-md-8 col-12"}
-              cardColor={"olive"}
-              style={{ height: "350px" }}
-            /> */}
+
           </div>
 
           <div className="row">
@@ -510,7 +504,6 @@ const FlexibleDashboard = () => {
                 >
                   <table
                     className="table table-sm"
-                    style={{ minHeight: "350px" }}
                   >
                     <thead>
                       <tr>

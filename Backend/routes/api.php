@@ -44,7 +44,7 @@ Route::post('/department/edit/{id}', [DepartmentController::class, 'update'])->m
 
 
 // Route::get('/dashboard/departments', [DashboardController::class, 'getDepartment'])->middleware('auth:api');
-Route::get('/dashboard/{department}', [DashboardController::class, 'index']);
+Route::get('/dashboard/{department}', [DashboardController::class, 'index'])->middleware('auth:api');
 Route::get('/dashboard/{department}/prYear/{year}', [DashboardController::class, 'prYear'])->middleware('auth:api');
 Route::get('/dashboard/{department}/poYear/{year}', [DashboardController::class, 'poYear'])->middleware('auth:api');
 Route::get('/dashboard/{department}/prYearPrice/{year}', [DashboardController::class, 'prYearPrice'])->middleware('auth:api');
@@ -54,9 +54,9 @@ Route::get('/dashboard/{department}/vendorTypeByYear/{year}', [DashboardControll
 
 
 Route::get('/pr', [PrController::class,'index'])->middleware('auth:api');
-Route::get('/pr/{pr_no}', [PrController::class,'pr_line'])->middleware('auth:api');
+Route::get('/pr/{pr_no}', [PrController::class,'pr_line']);
 
 
 
 Route::get('/po', [PoController::class,'index'])->middleware('auth:api');
-Route::get('/po/{po_no}', [PoController::class,'po_line'])->middleware('auth:api');
+Route::get('/po/{po_no}', [PoController::class,'po_line']);;

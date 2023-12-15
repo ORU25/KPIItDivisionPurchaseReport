@@ -13,6 +13,8 @@ use Carbon\Carbon;
 class DashboardController extends Controller
 {
     public function index($department){
+        $limitChart = 10;
+        $limitYear = range(date('Y') - 9, date('Y'));
 
         $totalPr = Purchase::where('departement', $department)->distinct('pr_no')->count();
         $prSuccess = Purchase::where('departement', $department)->distinct('pr_no')->where('po_no', '!=', null)->count();
@@ -43,8 +45,31 @@ class DashboardController extends Controller
         ->select( DB::raw('YEAR(pr_created) as year'), DB::raw('COUNT(*) as pr_line_year_count'))
         ->groupBy(DB::raw('YEAR(pr_created)'))
         ->orderBy(DB::raw('YEAR(pr_created)'), 'desc') // Urutkan data berdasarkan kolom yang diinginkan (misalnya 'created_at')
-        ->take(10)
+        ->take($limitChart)
         ->get();
+
+        $prLineYearResult = [];
+
+        // Inisialisasi hasil dengan nilai 0 untuk setiap tahun
+        foreach ($limitYear as $year) {
+            $prLineYearResult[] = [
+                'year' => $year,
+                'pr_line_year_count' => 0,
+            ];
+        }
+
+        // Update data yang sesuai dari hasil kueri
+        foreach ($prLineYear as $item) {
+            $index = array_search($item->year, array_column($prLineYearResult, 'year'));
+
+            if ($index !== false) {
+                $prLineYearResult[$index]['pr_line_year_count'] = $item->pr_line_year_count;
+            }
+        }
+
+        // Hanya tampilkan data 10 tahun terakhir
+        // $prLineYearsData = array_slice($prLineYearResult, -10);
+
 
         
 
@@ -66,12 +91,12 @@ class DashboardController extends Controller
         ->groupBy( 'vendor_type','year')
         ->get();
 
-           $uniqueYears = $vendorTypePoCount->sortByDesc('year')->pluck('year')->unique()->take(10);
-        // $uniqueYears = $vendorTypePoCount->pluck('year')->unique()->sort();
-                
+        //    $uniqueYears = $vendorTypePoCount->sortByDesc('year')->pluck('year')->unique()->take($limitChart);
+
             // Organize the data by vendor_type and year
             $result = [
-                'years' => $uniqueYears->reverse()->values()->toArray(),
+                // 'years' => $uniqueYears->reverse()->values()->toArray(),
+                'years' => $limitYear,
             ];
             
             foreach ($vendorTypePoCount as $vendor) {
@@ -98,9 +123,31 @@ class DashboardController extends Controller
             DB::raw('COUNT(DISTINCT po_no) as po_year_count')
         )
         ->groupBy(DB::raw('YEAR(po_created)'))
-        ->orderBy(DB::raw('YEAR(po_created)'), 'desc') // Urutkan data berdasarkan kolom yang diinginkan (misalnya 'created_at')
-        ->take(10)
+        ->orderBy(DB::raw('YEAR(po_created)'), 'desc') 
+        ->take($limitChart)
         ->get();
+
+        $poYearResult = [];
+
+        // Inisialisasi hasil dengan nilai 0 untuk setiap tahun
+        foreach ($limitYear as $year) {
+            $poYearResult[] = [
+                'year' => $year,
+                'po_year_count' => 0,
+            ];
+        }
+
+        // Update data yang sesuai dari hasil kueri
+        foreach ($poYear as $item) {
+            $index = array_search($item->year, array_column($poYearResult, 'year'));
+
+            if ($index !== false) {
+                $poYearResult[$index]['po_year_count'] = $item->po_year_count;
+            }
+        }
+
+        // Hanya tampilkan data 10 tahun terakhir
+        // $poYearsData = array_slice($poYearResult, -10);
         
         
         $poYearSuccess = Purchase::where('departement', $department)
@@ -150,7 +197,26 @@ class DashboardController extends Controller
                     'total_price_per_year' => round($groupedItems->sum('total_price_idr')),
                 ];
             })->sortByDesc('year') 
-            ->take(10)->values();
+            ->take($limitChart)->values();
+
+            $poYearTotalPriceResult = [];
+
+            // Iterasi melalui tahun-tahun
+            foreach ($limitYear as $year) {
+                // Cari data untuk tahun tersebut
+                $dataForYear = $poYearPricePerYear->firstWhere('year', $year);
+
+                // Jika tidak ada data, set total harga menjadi 0
+                $totalPrice = $dataForYear ? $dataForYear['total_price_per_year'] : 0;
+
+                // Tambahkan data ke hasil
+                $poYearTotalPriceResult[] = [
+                    'year' => $year,
+                    'total_price_per_year' => $totalPrice,
+                ];
+            }
+
+
         
         $prYearEstPrice = Purchase::where('departement', $department)
         ->where('pr_created', '!=', null)
@@ -176,7 +242,24 @@ class DashboardController extends Controller
                     'total_est_price' => round($groupedItems->sum('est_price_idr')),
                 ];
             })->sortByDesc('year') 
-            ->take(10)->values();
+            ->take($limitChart)->values();
+
+            $prYearEstPriceResult = [];
+
+            // Iterasi melalui tahun-tahun
+            foreach ($limitYear as $year) {
+                // Cari data untuk tahun tersebut
+                $dataForYear = $prYearEstPricePerYear->firstWhere('year', $year);
+
+                // Jika tidak ada data, set total harga menjadi 0
+                $totalEstPrice = $dataForYear ? $dataForYear['total_est_price'] : 0;
+
+                // Tambahkan data ke hasil
+                $prYearEstPriceResult[] = [
+                    'year' => $year,
+                    'total_est_price' => $totalEstPrice,
+                ];
+            }
 
         
         $yearPo= Purchase::where('departement', $department)
@@ -215,18 +298,18 @@ class DashboardController extends Controller
             'prRequester' => $prRequester,
             'prBuyer' => $prBuyer,
 
-            'prLineYear' => $prLineYear->reverse()->values(),
+            'prLineYear' => $prLineYearResult,
             'prLineYearSuccess' => $prLineYearSuccess,
             'prLineYearCancel' => $prLineYearCancel,
 
             'vendorTypePoCount' => $result,
 
-            'poYear' => $poYear->reverse()->values(),
+            'poYear' =>  $poYearResult,
             'poYearSuccess' => $poYearSuccess,
             'poYearCancel' => $poYearCancel,
 
-            'poYearPrice' => $poYearPricePerYear->reverse()->values()->toArray(),
-            'prYearEstPrice' => $prYearEstPricePerYear->reverse()->values()->toArray(),
+            'poYearPrice' => $poYearTotalPriceResult,
+            'prYearEstPrice' =>  $prYearEstPriceResult,
 
             'departments' => $department,
             'yearsPo' =>$yearPo,

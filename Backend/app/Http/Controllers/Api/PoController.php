@@ -126,7 +126,7 @@ class PoController extends Controller
             'po_cancel_comments',
             'eta_gmt8',
             'po_created'
-        )->get();
+        )->orderBy('po_line')->get();
 
 
         $totalPriceIDR = 0;
