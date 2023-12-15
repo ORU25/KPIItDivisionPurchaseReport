@@ -61,7 +61,11 @@ const TotalEstPricePrChart = ({
 
   useEffect(() => {
     fetchYear();
-  }, [year]);
+  }, [year,chartData]);
+
+  useEffect(() => {
+    setYear(null)
+  },[chartData])
 
   useEffect(() => {
     prEstPriceHandler();

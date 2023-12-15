@@ -95,7 +95,11 @@ const PoYearChart = ({
 
   useEffect(() => {
     fetchYear();
-  }, [year]);
+  }, [year,chartData]);
+
+  useEffect(() => {
+    setYear(null)
+  },[chartData])
 
   useEffect(() => {
     poYearHandler();
@@ -147,6 +151,7 @@ const PoYearChart = ({
             <select
               className="form-control form-control-sm text-center"
               onChange={handleSelectChange}
+              
             >
               <option value={null}>All</option>
               {yearList &&
