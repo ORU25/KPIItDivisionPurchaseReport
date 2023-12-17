@@ -106,6 +106,44 @@ class PrController extends Controller
             'po_cancel',
         )->distinct('po_no')->get();
 
+        $po_pr_line = Purchase::where('pr_no', $pr_no)->where('po_no', '!=', null)
+        ->select(
+            'po_no',
+            'pr_line'
+        )->get();
+
+        $po_merged = [];
+
+        // Merging the two arrays based on 'po_no'
+        foreach ($po as $po_item) {
+            $po_no = $po_item->po_no;
+        
+            // Create a new array to store the merged data
+            $merged_item = [
+                'po_no' => $po_item->po_no,
+                'po_created' => $po_item->po_created,
+                'po_last_changed' => $po_item->po_last_changed,
+                'po_approve' => $po_item->po_approve,
+                'po_confirmation' => $po_item->po_confirmation,
+                'po_received' => $po_item->po_received,
+                'po_closed' => $po_item->po_closed,
+                'po_cancel' => $po_item->po_cancel,
+                'pr_lines' => [],
+            ];
+        
+            // Find and merge 'pr_line' from $po_pr_line
+            foreach ($po_pr_line as $pr_line_item) {
+                if ($pr_line_item->po_no == $po_no) {
+                    $merged_item['pr_lines'][] = ['pr_line' => $pr_line_item->pr_line];
+                }
+            }
+        
+            // Add the merged item to the final result array
+            $po_merged[] = $merged_item;
+        }
+        
+        // Convert the result to JSON      
+
         
         $totalPriceIDR = 0;
 
@@ -124,7 +162,7 @@ class PrController extends Controller
         $formattedTotalPriceIDR = number_format($totalPriceIDR, 0, ',', '.');
 
         $pr->est_total_price_idr = $formattedTotalPriceIDR;
-        $pr->po = $po;
+        $pr->po = $po_merged;
         $pr->pr_lines = $pr_lines;
         
         return response()->json($pr);

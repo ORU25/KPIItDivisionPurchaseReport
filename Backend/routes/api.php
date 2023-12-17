@@ -53,7 +53,7 @@ Route::get('/dashboard/{department}/vendorTypeByYear/{year}', [DashboardControll
 
 
 
-Route::get('/pr', [PrController::class,'index'])->middleware('auth:api');
+Route::get('/pr', [PrController::class,'index']);
 Route::get('/pr/{pr_no}', [PrController::class,'pr_line']);
 
 

@@ -208,10 +208,19 @@ const PrLine = () => {
                             <div key={key} className="col-12 col-md-6 col-lg-4">
                               <Link
                                 to={`/po/${po.po_no}`}
-                                className="btn btn-app bg-olive  rounded"
+                                className="btn btn-app bg-olive rounded mx-auto"
                               >
                                 <i className="fas fa-inbox" /> {po.po_no}
                               </Link>
+                              <div className="mb-3 bg-gray p-2 rounded">
+                                <b>PR Lines: </b>
+                                {po.pr_lines.map((pr_line, key) => (
+                                  <>
+                                    <span key={key}>{pr_line.pr_line}</span>
+                                    {key !== po.pr_lines.length - 1 && <span>,</span>}
+                                  </>
+                                ))}
+                              </div>
                               <div className="timeline mt-2">
                                 <TimeLineItem
                                   icon={"fas fa-calendar-plus"}

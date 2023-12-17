@@ -87,28 +87,42 @@ class PoController extends Controller
         )
         ->distinct('pr_no') 
         ->get();
-        
-        $pr_data = [];
+
+        $pr_po_lines = Purchase::where('po_no', $po_no)->select('pr_no','po_line')->get();
+
+        $pr_merged = [];
 
         foreach ($prs as $pr) {
-            // Mengecek apakah pr_no sudah ada dalam $pr_data
+            
             $prExists = false;
-            foreach ($pr_data as $existingPr) {
+
+            foreach ($pr_merged as $existingPr) {
                 if ($existingPr['pr_no'] === $pr->pr_no) {
                     $prExists = true;
                     break;
                 }
             }
-        
-            // Jika pr_no belum ada, tambahkan ke dalam $pr_data
             if (!$prExists) {
-                $pr_data[] = [
+                $pr_no = $pr->pr_no;
+                $merged_item = [
                     'pr_no' => $pr->pr_no,
                     'pr_created' => $pr->pr_created,
                     'pr_approve_date' => $pr->pr_approve_date,
+                    'po_lines' => [],
                 ];
+            
+            
+                // Find and merge 'po_line' from $pr_po_lines
+                foreach ($pr_po_lines as $pr_line_item) {
+                    if ($pr_line_item->pr_no == $pr_no) {
+                        $merged_item['po_lines'][] = ['po_line' => $pr_line_item->po_line];
+                    }
+                }
+            
+                $pr_merged[] = $merged_item;
             }
         }
+                
         
 
         $po_lines = Purchase::where('po_no', $po_no)
@@ -127,6 +141,8 @@ class PoController extends Controller
             'eta_gmt8',
             'po_created'
         )->orderBy('po_line')->get();
+
+
 
 
         $totalPriceIDR = 0;
@@ -163,7 +179,7 @@ class PoController extends Controller
         }
         
         $po->total_price_idr = $formattedTotalPriceIDR;
-        $po->pr = $pr_data;
+        $po->pr = $pr_merged;
         $po->po_lines = $po_lines_data;
 
         return response()->json($po);
