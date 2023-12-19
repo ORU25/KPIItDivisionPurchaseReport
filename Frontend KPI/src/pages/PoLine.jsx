@@ -251,11 +251,18 @@ const PoLine = () => {
                                 <i className="fas fa-receipt" /> {pr.pr_no}
                               </Link>
                               <div className="mb-3 bg-gray p-2 rounded">
-                                <b>PO Lines: </b>
+                                {pr.po_lines.length > 1 ? (
+                                  <b>PO Lines: </b>
+                                ) : (
+                                  <b>PO Line: </b>
+                                )}
+                                {/* <b>PO Lines: </b> */}
                                 {pr.po_lines.map((po_line, key) => (
                                   <>
                                     <span key={key}>{po_line.po_line}</span>
-                                    {key !== pr.po_lines.length - 1 && <span>,</span>}
+                                    {key !== pr.po_lines.length - 1 && (
+                                      <span>,</span>
+                                    )}
                                   </>
                                 ))}
                               </div>

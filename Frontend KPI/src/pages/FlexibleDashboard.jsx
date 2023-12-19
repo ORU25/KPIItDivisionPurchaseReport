@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Card from "../components/Card";
 import PieChart from "../components/PieChart";
-// import BarChart from "../components/BarChart";
 import DoughnutChart from "../components/DoughnutChart";
 import PrYearChart from "../components/prYearChart";
 import PoYearChart from "../components/poYearChart";
@@ -14,7 +13,6 @@ import VendorTypeByYearChart from "../components/VendorTypeByYearChart";
 const FlexibleDashboard = () => {
   const Navigate = useNavigate();
   const [data, setData] = useState([]);
-  // const [departments, setDepartments] = useState([]);
 
   const [poYear, setPoYear] = useState({});
   const [poYearPrice, setPoYearPrice] = useState({});
@@ -41,9 +39,6 @@ const FlexibleDashboard = () => {
     await axios
       .get(`${import.meta.env.VITE_BACKEND_API}/api/dashboard/${department}`)
       .then((response) => {
-        // if (response.data.totalPr == 0) {
-        //   Navigate("/404");
-        // }
         setData(response.data);
         setSelectDepartment(response.data.departments);
       })
@@ -59,20 +54,7 @@ const FlexibleDashboard = () => {
       });
   };
 
-  // const fetchDepartments = async () => {
-  //   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  //   await axios
-  //   .get(`${import.meta.env.VITE_BACKEND_API}/api/dashboard/departments`)
-  //   .then((response) => {
-  //     setDepartments(response.data);
-  //   })
-  //   .catch((error) => {
-  //     if (error.response && error.response.status === 401) {
-  //       sessionStorage.removeItem("token");
-  //       Navigate("/");
-  //     }
-  //   });
-  // }
+
 
   const poYearHandler = () => {
     if (data && data.poYear) {
@@ -301,8 +283,9 @@ const FlexibleDashboard = () => {
   useEffect(() => {
     if (!token) {
       Navigate("/");
+      return;
     }
-    // fetchDepartments();
+    
     setData([]);
     setPoYear([]);
     setPoYearPrice([]);
@@ -316,6 +299,7 @@ const FlexibleDashboard = () => {
     setSortedRequesters([]);
 
     fetchData();
+
     window.scrollTo(0, 0);
   }, [token, Navigate]);
 

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Purchase extends Model
 {
     use HasFactory;
+    public $timestamps = false;
 
     protected $fillable = [
         "pr_no",

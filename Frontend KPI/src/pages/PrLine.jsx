@@ -122,8 +122,12 @@ const PrLine = () => {
                       </div>
                       <Card
                         color={"bg-olive"}
-                        title={<div className="h3 text-bold">{data.departement}</div>}
-                        mainData={<div className="h5 mt-1">Department/Division</div>}
+                        title={
+                          <div className="h3 text-bold">{data.departement}</div>
+                        }
+                        mainData={
+                          <div className="h5 mt-1">Department/Division</div>
+                        }
                         icon={"fas fa-building"}
                         classes={" col-12  col-xl-8 "}
                       />
@@ -213,11 +217,18 @@ const PrLine = () => {
                                 <i className="fas fa-inbox" /> {po.po_no}
                               </Link>
                               <div className="mb-3 bg-gray p-2 rounded">
-                                <b>PR Lines: </b>
+                                {po.pr_lines.length > 1 ? (
+                                  <b>PR Lines: </b>
+                                ) : (
+                                  <b>PR Line: </b>
+                                )}
+                                {/* <b>PR Lines: </b> */}
                                 {po.pr_lines.map((pr_line, key) => (
                                   <>
                                     <span key={key}>{pr_line.pr_line}</span>
-                                    {key !== po.pr_lines.length - 1 && <span>,</span>}
+                                    {key !== po.pr_lines.length - 1 && (
+                                      <span>,</span>
+                                    )}
                                   </>
                                 ))}
                               </div>

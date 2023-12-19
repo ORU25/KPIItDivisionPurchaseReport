@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Department;
 use App\Models\Purchase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -552,18 +551,6 @@ class DashboardController extends Controller
 
         return response()->json($resultPrYearEstPrice,200);
     }
-
-    // public function getDepartment(){
-    //     $department = Department::all();
-    //     $data = $department->map(function ($data){
-    //         return [
-    //             'name' => $data->name,
-    //         ];
-    //     });
-
-    //     return response()->json($data,200);
-
-    // }
 
     public function vendorTypeByYear($department, $year){
         // Array bulan tetap

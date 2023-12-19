@@ -28,7 +28,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
    return response()->json($userData);
 });
 
-Route::post('/register', RegisterController::class)->name('register');
+Route::post('/register', RegisterController::class)->name('register')->middleware('auth:api','role:admin');
 Route::post('/login', LoginController::class)->name('login');
 Route::post('/logout', LogoutController::class)->name('logout')->middleware('auth:api');
 
@@ -42,8 +42,6 @@ Route::post('/departments', [DepartmentController::class, 'store'])->middleware(
 Route::get('/department/{id}', [DepartmentController::class, 'edit'])->middleware('auth:api','role:admin');
 Route::post('/department/edit/{id}', [DepartmentController::class, 'update'])->middleware('auth:api','role:admin');
 
-
-// Route::get('/dashboard/departments', [DashboardController::class, 'getDepartment'])->middleware('auth:api');
 Route::get('/dashboard/{department}', [DashboardController::class, 'index'])->middleware('auth:api');
 Route::get('/dashboard/{department}/prYear/{year}', [DashboardController::class, 'prYear'])->middleware('auth:api');
 Route::get('/dashboard/{department}/poYear/{year}', [DashboardController::class, 'poYear'])->middleware('auth:api');
@@ -51,12 +49,8 @@ Route::get('/dashboard/{department}/prYearPrice/{year}', [DashboardController::c
 Route::get('/dashboard/{department}/poYearPrice/{year}', [DashboardController::class, 'poYearPrice'])->middleware('auth:api');
 Route::get('/dashboard/{department}/vendorTypeByYear/{year}', [DashboardController::class, 'vendorTypeByYear'])->middleware('auth:api');
 
-
-
-Route::get('/pr', [PrController::class,'index']);
-Route::get('/pr/{pr_no}', [PrController::class,'pr_line']);
-
-
+Route::get('/pr', [PrController::class,'index'])->middleware('auth:api');
+Route::get('/pr/{pr_no}', [PrController::class,'pr_line'])->middleware('auth:api');
 
 Route::get('/po', [PoController::class,'index'])->middleware('auth:api');
-Route::get('/po/{po_no}', [PoController::class,'po_line']);;
+Route::get('/po/{po_no}', [PoController::class,'po_line'])->middleware('auth:api');

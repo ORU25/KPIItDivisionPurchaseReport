@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Department;
+use App\Models\Purchase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -123,6 +124,19 @@ class DepartmentController extends Controller
         }
 
         try {
+               
+            $purchase = Purchase::where('departement', $department->name)->get();
+
+            if ($purchase->isNotEmpty()) {
+                // Update departemen pada pembelian yang terkait
+                $purchase->each(function ($purchaseItem) use ($request) {
+                    $purchaseItem->update([
+                        'departement' => $request->name
+                    ]);
+                });
+            }
+
+            
             $department->update([
                'name'=>$request->name, 
             ]);
@@ -135,6 +149,7 @@ class DepartmentController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update department',
+                'error' => $th
             ], 409);
         }
 

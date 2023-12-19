@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Logo from "../assets/kpi_logo.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -8,6 +8,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [validation, setValidation] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  
 
   const navigate = useNavigate();
 
@@ -34,11 +35,11 @@ const Login = () => {
     setIsLoading(false);
   };
 
-  // useEffect(() => {
-  //   if (sessionStorage.getItem("token")) {
-  //     navigate("/dashboard");
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (sessionStorage.getItem("token")) {
+      navigate(-1);
+    }
+  }, []);
 
   return (
     <div id="login" className="hold-transition login-page">
