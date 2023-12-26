@@ -11,7 +11,6 @@ import Users from "./pages/User/Users";
 import UserCreate from "./pages/User/UserCreate";
 import NotFound from "./components/NotFound";
 import UserEdit from "./pages/User/UserEdit";
-// import Dashboard from "./pages/Dashboard";
 import FlexibleDashboard from "./pages/FlexibleDashboard";
 import Departments from "./pages/Department/Departments";
 import DepartmentCreate from "./pages/Department/DepartmentCreate";
@@ -61,20 +60,7 @@ const App = () => {
   return (
     <div className="">
       <Routes>
-        <Route path="/" element={<Login />} />
-        {/* <Route
-          path="/dashboard"
-          element={
-            <Layout
-              title={"DASHBOARD PT KALTIM PARNA INDUSTRI"}
-              {...layoutProps}
-              handleLogout={handleLogout}
-            >
-              <Dashboard department={user.department} />
-            </Layout>
-          }
-        /> */}
-
+        <Route path="/" element={<Login />} />       
         <Route
           path="/dashboard/:department"
           element={
@@ -86,7 +72,7 @@ const App = () => {
               <FlexibleDashboard />
             </Layout>
           }
-        />
+        />       
         <Route
           path="/pr"
           element={

@@ -48,6 +48,7 @@ const Pr = () => {
 
   useEffect(() => {
     const result = dataPr.filter((item) => {
+      const departmentMatch= item.departement ? item.departement.toLowerCase().includes(search.toLowerCase()) : false;
       const prDescMatch = item.pr_desc ? item.pr_desc.toLowerCase().includes(search.toLowerCase()) : false;
       const buyerMatch = item.buyer ? item.buyer.toLowerCase().includes(search.toLowerCase()) : false;
       const prTypeMatch = item.pr_type ? item.pr_type.toLowerCase().includes(search.toLowerCase()) : false;
@@ -67,6 +68,7 @@ const Pr = () => {
         prCreatedMatch ||
         prApproveDateMatch ||
         prCancelMatch ||
+        departmentMatch ||
         prNoMatch
       );
     });
