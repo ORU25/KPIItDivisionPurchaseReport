@@ -51,16 +51,25 @@ const App = () => {
     if (token && !user.role && !user.name) {
       getUser();
     } else if (!token) {
+      setUser({
+        role: null,
+        name: null,
+        department: null,
+      });
       Navigate("/");
     }
   }, [token]);
 
-  const layoutProps = { role: user.role, name: user.name, department: user.department};
+  const layoutProps = {
+    role: user.role,
+    name: user.name,
+    department: user.department,
+  };
 
   return (
     <div className="">
       <Routes>
-        <Route path="/" element={<Login />} />       
+        <Route path="/" element={<Login />} />
         <Route
           path="/dashboard/:department"
           element={
@@ -72,7 +81,7 @@ const App = () => {
               <FlexibleDashboard />
             </Layout>
           }
-        />       
+        />
         <Route
           path="/pr"
           element={
